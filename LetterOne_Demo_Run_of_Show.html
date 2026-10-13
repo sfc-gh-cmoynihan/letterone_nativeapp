@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="glean-artifact-type" content="visual_content">
+<title>LetterOne Demo Run of Show</title>
+<style>
+:root {
+  --artifact-background: #ffffff;
+  --artifact-background-light: #f1f3f6;
+  --artifact-background-mid: #e9ecf1;
+  --artifact-border-light: #e3e6ec;
+  --artifact-border-dark: #cdd2db;
+  --artifact-primary-brand: #3559e6;
+  --artifact-primary-highlight: #0d0f14;
+  --artifact-primary-hover: #2442b8;
+  --artifact-selected: #eaeefc;
+  --artifact-text-primary: #11141a;
+  --artifact-text-secondary: #5c6470;
+  --artifact-text-highlight: #e8eefc;
+  --artifact-positive-background: #e8f6ee;
+  --artifact-positive-text: #11141a;
+  --artifact-positive: #159a6a;
+  --artifact-negative: #dc4c4c;
+  --artifact-on-brand: #ffffff;
+  --artifact-tooltip-bg: #11141a;
+  --artifact-tooltip-text: #f5f7fb;
+  --artifact-seg-1: #3559e6;
+  --artifact-seg-2: #159a6a;
+  --artifact-seg-3: #c2410c;
+  --artifact-seg-4: #7c3aed;
+  --artifact-seg-n: #9aa3b2;
+}
+html[data-theme='dark'] {
+  --artifact-background: #0a0b0e;
+  --artifact-background-light: #121419;
+  --artifact-background-mid: #181b22;
+  --artifact-border-light: #23262e;
+  --artifact-border-dark: #343844;
+  --artifact-primary-brand: #6a92ff;
+  --artifact-primary-highlight: #f5f7fb;
+  --artifact-primary-hover: #88a8ff;
+  --artifact-selected: #1a2030;
+  --artifact-text-primary: #eef0f4;
+  --artifact-text-secondary: #9aa0ad;
+  --artifact-text-highlight: #14213d;
+  --artifact-positive-background: #0e2a1d;
+  --artifact-positive-text: #c8f5da;
+  --artifact-positive: #46d39a;
+  --artifact-negative: #ff6b6b;
+  --artifact-on-brand: #0a0b0e;
+  --artifact-tooltip-bg: #eef0f4;
+  --artifact-tooltip-text: #0a0b0e;
+  --artifact-seg-1: #6a92ff;
+  --artifact-seg-2: #46d39a;
+  --artifact-seg-3: #fb923c;
+  --artifact-seg-4: #a78bfa;
+  --artifact-seg-n: #5c6470;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--artifact-background);
+  color: var(--artifact-text-primary);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 16px; line-height: 1.6; letter-spacing: -0.005em;
+}
+h1, h2, h3 { font-weight: 400; line-height: 1.08; letter-spacing: -0.02em; margin: 0; color: var(--artifact-text-primary); }
+h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); font-weight: 300; }
+h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); }
+h3 { font-size: 1.1rem; font-weight: 500; }
+.eyebrow, th, .mono-label {
+  font-family: "SF Mono", "IBM Plex Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--artifact-text-secondary);
+}
+.mono { font-family: "SF Mono", "IBM Plex Mono", Consolas, monospace; font-size: 13px; }
+a { color: var(--artifact-primary-brand); text-decoration: none; }
+a:hover { color: var(--artifact-primary-hover); text-decoration: underline; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+
+/* Sticky run bar */
+.runbar {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--artifact-background);
+  border-bottom: 1px solid var(--artifact-border-light);
+}
+.runbar-inner { max-width: 1100px; margin: 0 auto; padding: 12px 28px 14px; }
+.runbar-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
+.runbar-title { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.runbar-title strong { font-weight: 500; }
+.now { font-size: 14px; color: var(--artifact-text-secondary); }
+.now b { color: var(--artifact-text-primary); font-weight: 500; }
+.controls { display: flex; gap: 8px; align-items: center; }
+.clock { font-family: "SF Mono", Consolas, monospace; font-size: 15px; min-width: 64px; text-align: right; color: var(--artifact-text-primary); }
+.btn {
+  font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--artifact-border-dark); background: var(--artifact-background); color: var(--artifact-text-primary);
+}
+.btn:hover { border-color: var(--artifact-primary-brand); color: var(--artifact-primary-brand); background: var(--artifact-background); }
+.btn.primary { background: var(--artifact-primary-brand); border-color: var(--artifact-primary-brand); color: var(--artifact-on-brand); }
+.btn.primary:hover { background: var(--artifact-primary-hover); border-color: var(--artifact-primary-hover); color: var(--artifact-on-brand); }
+.segs { position: relative; display: flex; gap: 3px; height: 34px; }
+.seg {
+  position: relative; border: none; padding: 0 8px; cursor: pointer; border-radius: 4px;
+  background: var(--artifact-background-mid); color: var(--artifact-text-primary);
+  font: inherit; font-size: 12px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 6px;
+}
+.seg .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--seg-color); }
+.seg:hover { background: var(--artifact-selected); color: var(--artifact-text-primary); }
+.seg.active { background: var(--artifact-text-highlight); color: var(--artifact-text-primary); outline: 1px solid var(--artifact-primary-brand); }
+.seg .fill { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--seg-color); }
+.seg span.lbl { position: relative; overflow: hidden; text-overflow: ellipsis; }
+
+/* Hero */
+.hero { padding: 72px 0 40px; }
+.hero .eyebrow { margin-bottom: 18px; display: block; }
+.hero p.lede { font-size: 1.25rem; color: var(--artifact-text-secondary); max-width: 720px; margin: 22px 0 0; font-weight: 300; }
+.meta-row { display: flex; gap: 36px; flex-wrap: wrap; margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--artifact-border-light); }
+.meta-row div { font-size: 14px; }
+.meta-row .eyebrow { display: block; margin-bottom: 4px; }
+.top-links { display: flex; gap: 16px; margin-top: 24px; }
+
+section.block { padding: 56px 0; border-top: 1px solid var(--artifact-border-light); scroll-margin-top: 110px; }
+.sec-head { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: end; margin-bottom: 30px; }
+.sec-head .eyebrow { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+.sec-head .eyebrow .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--seg-color); }
+.who { color: var(--artifact-text-secondary); font-size: 15px; margin-top: 10px; }
+.timebadge { text-align: right; }
+.timebadge .big { font-weight: 300; font-size: 3rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.timebadge .eyebrow { display: block; margin-top: 6px; }
+
+/* Architecture */
+.arch { display: grid; grid-template-columns: 1fr 40px 1.3fr 40px 1fr; align-items: stretch; gap: 0; }
+.arch-col { display: flex; flex-direction: column; gap: 10px; }
+.arch-col > .eyebrow { margin-bottom: 4px; }
+.node { border: 1px solid var(--artifact-border-light); border-radius: 8px; padding: 12px 14px; background: var(--artifact-background); font-size: 14px; }
+.node small { display: block; color: var(--artifact-text-secondary); font-size: 12.5px; margin-top: 2px; }
+.core { border: 1px solid var(--artifact-primary-brand); border-radius: 8px; padding: 18px; background: var(--artifact-text-highlight); color: var(--artifact-text-primary); height: 100%; display: flex; flex-direction: column; gap: 12px; }
+.core h3 { font-size: 1.2rem; }
+.core .layer { border-top: 1px solid var(--artifact-border-dark); padding-top: 10px; font-size: 14px; }
+.core .layer .mono-label { display: block; margin-bottom: 2px; }
+.arrow { display: flex; align-items: center; justify-content: center; color: var(--artifact-text-secondary); font-size: 22px; }
+.agent { display: flex; align-items: center; gap: 10px; }
+.agent .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--seg-color); flex: none; }
+
+.thread {
+  margin-top: 34px; padding: 22px 26px; border-radius: 8px;
+  background: var(--artifact-text-highlight); color: var(--artifact-text-primary);
+  display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center;
+}
+.thread .glyph { font-size: 34px; font-weight: 300; color: var(--artifact-primary-brand); }
+.thread p { margin: 4px 0 0; color: var(--artifact-text-primary); }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--artifact-border-light); border-radius: 8px; margin-bottom: 34px; }
+.stat { padding: 20px 20px 18px; border-right: 1px solid var(--artifact-border-light); }
+.stat:last-child { border-right: none; }
+.stat .v { font-weight: 300; font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.stat .l { font-size: 13.5px; color: var(--artifact-text-secondary); margin-top: 8px; line-height: 1.4; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; }
+.col-title { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+ul.heard { list-style: none; padding: 0; margin: 0; }
+ul.heard li { padding: 10px 0; border-bottom: 1px solid var(--artifact-border-light); font-size: 15px; }
+ul.heard li:first-child { padding-top: 0; }
+.need { margin-top: 22px; font-size: 1.15rem; font-weight: 300; line-height: 1.4; }
+.need .eyebrow { display: block; margin-bottom: 6px; }
+
+/* Steps */
+ol.steps { list-style: none; padding: 0; margin: 0; }
+ol.steps li {
+  display: grid; grid-template-columns: 26px 1fr auto; gap: 12px; align-items: start;
+  padding: 12px 0; border-bottom: 1px solid var(--artifact-border-light); cursor: pointer;
+}
+ol.steps li:first-child { padding-top: 0; }
+ol.steps li .check {
+  width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--artifact-border-dark);
+  display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--artifact-on-brand); margin-top: 2px;
+}
+ol.steps li.done .check { background: var(--artifact-positive); border-color: var(--artifact-positive); }
+ol.steps li.done .st { color: var(--artifact-text-secondary); text-decoration: line-through; }
+ol.steps li .st { font-weight: 500; font-size: 15px; }
+ol.steps li .sd { color: var(--artifact-text-secondary); font-size: 14px; margin-top: 2px; line-height: 1.5; }
+ol.steps li .min { font-family: "SF Mono", Consolas, monospace; font-size: 12.5px; color: var(--artifact-text-secondary); white-space: nowrap; }
+ol.steps li .opt { font-family: "SF Mono", Consolas, monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--artifact-text-secondary); border: 1px solid var(--artifact-border-dark); border-radius: 4px; padding: 0 5px; margin-left: 6px; }
+
+/* Prompts */
+.prompts { margin-top: 34px; }
+.prompt-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.prompt {
+  display: flex; gap: 12px; align-items: flex-start; justify-content: space-between;
+  border: 1px solid var(--artifact-border-light); border-radius: 8px; padding: 12px 14px; background: var(--artifact-background);
+  font-size: 14.5px; line-height: 1.45;
+}
+.prompt q { quotes: "\201C" "\201D"; }
+.copy { flex: none; font: inherit; font-size: 12px; padding: 3px 9px; border-radius: 5px; border: 1px solid var(--artifact-border-dark); background: var(--artifact-background); color: var(--artifact-text-secondary); cursor: pointer; }
+.copy:hover { color: var(--artifact-primary-brand); border-color: var(--artifact-primary-brand); background: var(--artifact-background); }
+.copy.ok { color: var(--artifact-positive); border-color: var(--artifact-positive); }
+
+.wow {
+  margin-top: 30px; padding: 20px 24px; border-radius: 8px; border: 1px solid var(--artifact-primary-brand);
+  background: var(--artifact-background); color: var(--artifact-text-primary);
+  display: grid; grid-template-columns: 110px 1fr; gap: 18px; align-items: center;
+}
+.wow .eyebrow { color: var(--artifact-primary-brand); }
+.wow p { margin: 0; font-size: 1.08rem; }
+
+.under { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; margin-top: 30px; }
+.qa { display: grid; grid-template-columns: 1fr; gap: 0; }
+.qa-row { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--artifact-border-light); font-size: 14px; }
+.qa-row .q { color: var(--artifact-text-secondary); font-style: italic; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag { font-family: "SF Mono", Consolas, monospace; font-size: 11.5px; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--artifact-border-light); color: var(--artifact-text-secondary); background: var(--artifact-background); }
+.hook { margin-top: 20px; padding: 14px 16px; border-radius: 8px; background: var(--artifact-positive-background); color: var(--artifact-positive-text); font-size: 14px; }
+.hook .mono-label { display: block; margin-bottom: 4px; color: var(--artifact-positive); }
+
+/* info tooltip */
+.info { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 17px; height: 17px; border-radius: 50%; border: 1px solid var(--artifact-border-dark); font-size: 11px; color: var(--artifact-text-secondary); cursor: help; font-style: normal; text-transform: none; letter-spacing: 0; background: var(--artifact-background); }
+.info:focus { outline: 2px solid var(--artifact-primary-brand); outline-offset: 1px; }
+.info .tip {
+  visibility: hidden; opacity: 0; position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%);
+  width: 280px; padding: 10px 12px; border-radius: 6px; z-index: 60;
+  background: var(--artifact-tooltip-bg); color: var(--artifact-tooltip-text);
+  font-family: "Inter", -apple-system, "Segoe UI", sans-serif; font-size: 12.5px; line-height: 1.45; font-weight: 400; text-align: left;
+  transition: opacity .15s;
+}
+.info:hover .tip, .info:focus .tip { visibility: visible; opacity: 1; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+th { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--artifact-border-dark); font-size: 11.5px; }
+td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--artifact-border-light); vertical-align: top; }
+td.muted { color: var(--artifact-text-secondary); }
+.tbl-wrap { overflow-x: auto; }
+
+.close-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.close-card { border: 1px solid var(--artifact-border-light); border-radius: 8px; padding: 16px; background: var(--artifact-background); }
+.close-card .n { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--artifact-primary-brand); }
+.close-card h3 { margin: 6px 0 6px; font-size: 1rem; }
+.close-card p { margin: 0; font-size: 13.5px; color: var(--artifact-text-secondary); line-height: 1.5; }
+
+.next { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--artifact-border-dark); }
+.next div { padding: 16px 16px 0 0; font-size: 14.5px; }
+.next .mono-label { display: block; margin-bottom: 6px; }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.progress-line { font-size: 13px; color: var(--artifact-text-secondary); margin-top: 6px; }
+.checkrow { display: grid; grid-template-columns: 24px 1fr auto; gap: 10px; align-items: start; padding: 9px 0; border-bottom: 1px solid var(--artifact-border-light); cursor: pointer; font-size: 14.5px; }
+.checkrow .check { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid var(--artifact-border-dark); margin-top: 3px; display:flex; align-items:center; justify-content:center; font-size: 12px; color: var(--artifact-on-brand); }
+.checkrow.done .check { background: var(--artifact-positive); border-color: var(--artifact-positive); }
+.checkrow.done .t { color: var(--artifact-text-secondary); text-decoration: line-through; }
+.checkrow .o { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--artifact-text-secondary); white-space: nowrap; }
+ul.plain { margin: 0; padding-left: 18px; }
+ul.plain li { margin: 6px 0; font-size: 14.5px; }
+
+/* Sources drawer */
+.drawer { display: none; margin-top: 24px; padding: 22px 24px; border: 1px solid var(--artifact-border-light); border-radius: 8px; background: var(--artifact-background); }
+.drawer.open { display: block; }
+.drawer p { margin: 0 0 12px; font-size: 14.5px; color: var(--artifact-text-secondary); }
+.drawer ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
+.drawer li { margin: 5px 0; }
+
+footer { padding: 40px 0 70px; color: var(--artifact-text-secondary); font-size: 13px; border-top: 1px solid var(--artifact-border-light); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.hero > * { animation: rise .6s ease both; }
+.hero > *:nth-child(2) { animation-delay: .08s; }
+.hero > *:nth-child(3) { animation-delay: .16s; }
+.hero > *:nth-child(4) { animation-delay: .24s; }
+@media (prefers-reduced-motion: reduce) { .hero > * { animation: none; } }
+
+@media screen and (max-width: 860px) {
+  .arch { grid-template-columns: 1fr; gap: 14px; }
+  .arrow { transform: rotate(90deg); height: 24px; }
+  .grid2, .under, .two { grid-template-columns: 1fr; gap: 28px; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stat:nth-child(2) { border-right: none; }
+  .stat:nth-child(-n+2) { border-bottom: 1px solid var(--artifact-border-light); }
+  .prompt-list { grid-template-columns: 1fr; }
+  .close-grid { grid-template-columns: 1fr 1fr; }
+  .next { grid-template-columns: 1fr 1fr; }
+  .seg span.lbl { display: none; }
+  .wow { grid-template-columns: 1fr; gap: 6px; }
+}
+
+@media print {
+  @page { size: auto !important; }
+  body { margin: 0; padding: 0.4in 0.6in; background: #fff; color: #11141a; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .wrap, main { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
+  .runbar { display: none !important; }
+  .hero { padding: 0 0 20px; }
+  section.block { padding: 24px 0; break-inside: auto; margin-bottom: 20px !important; }
+  .sec-head, .stats, .wow, .hook, .thread, .prompt, .qa-row, table, .close-card, ol.steps li { break-inside: avoid; }
+  [class*="card"] { break-inside: avoid; padding: 14px !important; box-shadow: none !important; border: 1px solid rgba(0,0,0,0.08); }
+  .drawer { display: block !important; }
+  .info .tip { display: none !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  button, [role="button"], .interactive-only { display: none !important; }
+  .grid2, .under { grid-template-columns: 1fr 1.2fr; }
+}
+@page { size: auto !important; }
+
+</style>
+</head>
+<body>
+
+<div class="runbar" data-glean-id="runbar">
+  <div class="runbar-inner">
+    <div class="runbar-top">
+      <div class="runbar-title"><span class="eyebrow">Run of show · 60 min</span><span class="now" id="now">Press start when the demo begins</span></div>
+      <div class="controls interactive-only">
+        <span class="clock" id="clock">00:00</span>
+        <button type="button" class="btn primary" id="startBtn">Start</button>
+        <button type="button" class="btn" id="resetBtn">Reset</button>
+      </div>
+    </div>
+    <div class="segs" id="segs"><button type="button" class="seg" data-seg="open" data-start="0" data-end="5" style="flex:5; --seg-color: var(--artifact-seg-n)" data-glean-id="seg-open"><span class="dot"></span><span class="lbl">Opening</span><span class="fill"></span></button><button type="button" class="seg" data-seg="ops" data-start="5" data-end="17" style="flex:12; --seg-color: var(--artifact-seg-1)" data-glean-id="seg-ops"><span class="dot"></span><span class="lbl">COO Ops</span><span class="fill"></span></button><button type="button" class="seg" data-seg="risk" data-start="17" data-end="28" style="flex:11; --seg-color: var(--artifact-seg-2)" data-glean-id="seg-risk"><span class="dot"></span><span class="lbl">Risk</span><span class="fill"></span></button><button type="button" class="seg" data-seg="trading" data-start="28" data-end="39" style="flex:11; --seg-color: var(--artifact-seg-3)" data-glean-id="seg-trading"><span class="dot"></span><span class="lbl">Trading</span><span class="fill"></span></button><button type="button" class="seg" data-seg="dl" data-start="39" data-end="50" style="flex:11; --seg-color: var(--artifact-seg-4)" data-glean-id="seg-dl"><span class="dot"></span><span class="lbl">Direct Lending</span><span class="fill"></span></button><button type="button" class="seg" data-seg="close" data-start="50" data-end="55" style="flex:5; --seg-color: var(--artifact-seg-n)" data-glean-id="seg-close"><span class="dot"></span><span class="lbl">Close</span><span class="fill"></span></button><button type="button" class="seg" data-seg="next" data-start="55" data-end="60" style="flex:5; --seg-color: var(--artifact-seg-n)" data-glean-id="seg-next"><span class="dot"></span><span class="lbl">Next steps</span><span class="fill"></span></button></div>
+  </div>
+</div>
+
+<main class="wrap">
+
+<header class="hero" data-glean-id="hero">
+  <span class="eyebrow">LetterOne × Snowflake · End-to-end demo · for Colm Moynihan</span>
+  <h1>One governed platform.<br>Four teams. One hour.</h1>
+  <p class="lede">A bespoke walkthrough built from last week's four interviews. It shows how Snowflake brings AI to governed data, so every LetterOne team can ask questions in plain English and trust the answer.</p>
+  <div>
+    <div class="meta-row">
+      <div><span class="eyebrow">Owner</span>Cian McCartney</div>
+      <div><span class="eyebrow">Demo lead</span>Colm Moynihan</div>
+      <div><span class="eyebrow">Value</span>Lawrence King</div>
+      <div><span class="eyebrow">Version</span>1.0 · 29 Sep 2026</div>
+    </div>
+    <div class="top-links interactive-only">
+      <button type="button" class="btn" id="srcBtn">Sources</button>
+      <button type="button" class="btn" data-jump="kit">Build kit</button>
+    </div>
+    <div class="drawer" id="drawer" data-glean-id="sources-drawer">
+      <p>This guide is drawn from the four LetterOne discovery interviews (24-28 Sep 2026), the Zoom meeting summaries, and our BVA interview guide and deck. Figures shown are LetterOne's own estimates from those conversations. They haven't been measured yet. Every demo dataset is synthetic.</p>
+      <ul><li><a href="https://us-60424.app.gong.io/call?id=1211664343137341565" target="_blank" rel="noopener">COO Treasury interview, David Talbot (Gong, 24 Sep 2026)</a></li><li><a href="https://us-60424.app.gong.io/call?id=4410302181004659962" target="_blank" rel="noopener">Trading interview, Amy Abob and Matei Moprea (Gong, 24 Sep 2026)</a></li><li><a href="https://us-60424.app.gong.io/call?id=2935570053461375399" target="_blank" rel="noopener">Risk interview, Jason Lai and Sam Drury (Gong, 25 Sep 2026)</a></li><li><a href="https://us-60424.app.gong.io/call?id=1041622442274814782" target="_blank" rel="noopener">Direct Lending interview, Daniele Gualdani (Gong, 28 Sep 2026)</a></li><li><a href="https://mail.google.com/mail/u/#inbox/1a0d905db4938410" target="_blank" rel="noopener">Risk meeting summary (Zoom)</a></li><li><a href="https://mail.google.com/mail/u/#inbox/1a0e8e699fc3d868" target="_blank" rel="noopener">Direct Lending meeting summary (Zoom)</a></li><li><a href="https://docs.google.com/document/d/1lwJEEoz09hoQDD7M2UdZ3RdyDhfzcDoY0lebA5iqYoQ" target="_blank" rel="noopener">LetterOne BVA Interview Guide 24/09</a></li><li><a href="https://docs.google.com/presentation/d/16MEhsISDHJNEvrg__hPbRop5WE0j7C2h2ghFDh496O0" target="_blank" rel="noopener">LetterOne BVA Deck Treasury</a></li></ul>
+    </div>
+  </div>
+</header>
+
+<section class="block" id="sec-open" data-glean-id="section-foundation" style="--seg-color: var(--artifact-seg-n)">
+  <div class="sec-head">
+    <div><div class="eyebrow"><span class="dot"></span>Opening · starts 0:00</div><h2>The foundation, built once</h2><div class="who">Show all the data in one catalogue before any team section begins.</div></div>
+    <div class="timebadge"><div class="big">5<span style="font-size:1.2rem"> min</span></div><span class="eyebrow">runtime</span></div>
+  </div>
+
+  <div class="arch" data-glean-id="architecture">
+    <div class="arch-col">
+      <span class="eyebrow">Data in</span>
+      <div class="node" data-glean-id="arch-enfusion">Enfusion<small>Secure data share. No pipeline, no SFTP.</small></div>
+      <div class="node" data-glean-id="arch-marketplace">Marketplace<small>Bloomberg DL+ and 4,000+ datasets</small></div>
+      <div class="node" data-glean-id="arch-files">LetterOne files<small>Statements, trustee reports, CLO docs, deal folders</small></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="core" data-glean-id="arch-core">
+      <span class="eyebrow" style="color:var(--artifact-primary-brand)">Snowflake on Azure UK South · fully managed</span>
+      <h3>One governed Data &amp; AI platform</h3>
+      <div class="layer"><span class="mono-label">Govern</span>Horizon: role-based access, masking, lineage, budgets</div>
+      <div class="layer"><span class="mono-label">Understand</span>One semantic layer. Business definitions written once.</div>
+      <div class="layer"><span class="mono-label">Compute</span>SQL, Snowpark Python, Cortex AI, all in the platform</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-col">
+      <span class="eyebrow">Four governed agents</span>
+      <div class="node agent" style="--seg-color: var(--artifact-seg-1)" data-glean-id="arch-agent-ops"><span class="dot"></span>Treasury Ops</div>
+      <div class="node agent" style="--seg-color: var(--artifact-seg-2)" data-glean-id="arch-agent-risk"><span class="dot"></span>Risk</div>
+      <div class="node agent" style="--seg-color: var(--artifact-seg-3)" data-glean-id="arch-agent-trading"><span class="dot"></span>Structured Credit</div>
+      <div class="node agent" style="--seg-color: var(--artifact-seg-4)" data-glean-id="arch-agent-dl"><span class="dot"></span>Direct Lending</div>
+      <div class="node" data-glean-id="arch-surfaces"><small style="margin:0">Delivered through Snowflake Intelligence, Streamlit, Notebooks and MCP to Copilot</small></div>
+    </div>
+  </div>
+
+  <div class="thread" data-glean-id="golden-thread">
+    <div class="glyph">=</div>
+    <div><span class="eyebrow">The golden thread</span>
+      <p>Define USD-equivalent exposure by entity once. Ask the Ops agent in Section 1 and the Risk agent in Section 2. Same number. At the close, show its lineage back to Enfusion.</p></div>
+  </div>
+</section>
+
+<section class="block" id="sec-ops" data-glean-id="section-ops" style="--seg-color: var(--artifact-seg-1)">
+<div class="sec-head" data-glean-id="ops-header"><div><div class="eyebrow"><span class="dot"></span>Section 01 · starts 0:05</div><h2>COO Treasury Operations</h2><div class="who">David Talbot (COO), with Steven Gladstone and Dmitry Yurin</div></div>
+<div class="timebadge"><div class="big">12<span style="font-size:1.2rem"> min</span></div><span class="eyebrow">runtime</span></div></div>
+<div class="stats" data-glean-id="ops-stats">
+<div class="stat" data-glean-id="ops-stat-1"><div class="v">~30</div><div class="l">spreadsheets produced every business day</div></div>
+<div class="stat" data-glean-id="ops-stat-2"><div class="v">50%+</div><div class="l">of the Ops team&#x27;s time on work that could go away</div></div>
+<div class="stat" data-glean-id="ops-stat-3"><div class="v">6-7 days</div><div class="l">of month-end before Enfusion is locked</div></div>
+<div class="stat" data-glean-id="ops-stat-4"><div class="v">75%</div><div class="l">of month-end coordination David thinks can go</div></div>
+</div>
+<div class="grid2"><div data-glean-id="ops-heard"><div class="col-title"><span class="eyebrow">What we heard</span><span class="info" tabindex="0" aria-label="Source">i<span class="tip">Summarised from the COO Treasury interview, David Talbot (Gong, 24 Sep 2026). From David Talbot&#x27;s interview on 24 Sep 2026 and the BVA interview guide (the ~30 daily spreadsheets figure is Steven&#x27;s own phrasing). These are LetterOne&#x27;s estimates and haven&#x27;t been measured yet.</span></span></div><ul class="heard">
+<li>Enfusion exports feed every process. Then it&#x27;s manual work in Excel.</li>
+<li>Logic sits in macros only one or two people understand. Several versions of the truth.</li>
+<li>Checklists live in Excel: “pretty archaic”.</li>
+<li>Month end means waiting on emails and FTP pricing files.</li>
+<li>He wants agents and rules that produce exceptions, so the team only reviews.</li>
+</ul><div class="need" data-glean-id="ops-need"><span class="eyebrow">What they need to see</span>The morning run producing itself, the team reviewing exceptions only, and full control over the rules. All native to Snowflake.</div></div>
+<div data-glean-id="ops-steps"><div class="col-title"><span class="eyebrow">Show them</span><span class="progress-line" id="prog-ops"></span></div><ol class="steps" data-sec="ops">
+<li data-glean-id="ops-step-1" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">1.1 Treasury Ops control dashboard</div><div class="sd">Streamlit app replaces the Excel checklist: P&amp;L, cash rec, cash forecast, position rec each show complete, waiting or exception. Assign, comment, sign off.</div></div><span class="min">3 min</span></li>
+<li data-glean-id="ops-step-2" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">1.2 Reconciliation, exceptions only</div><div class="sd">Enfusion against bank and custodian statements across 300+ accounts. Rules in SQL, not VBA. AI explains each break in plain English.</div></div><span class="min">3 min</span></li>
+<li data-glean-id="ops-step-3" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">1.3 Ask the Treasury Ops agent</div><div class="sd">Natural-language questions in Snowflake Intelligence. Open the SQL and verified query after every answer.</div></div><span class="min">3 min</span></li>
+<li data-glean-id="ops-step-4" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">1.4 The “no time bomb” moment</div><div class="sd">Rules under version control in Git, auto-drafted documentation, Time Travel to re-run yesterday, and a side-by-side check against the old spreadsheet.</div></div><span class="min">2 min</span></li>
+<li data-glean-id="ops-step-5" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">1.5 Month-end file tracker<span class="opt">optional</span></div><div class="sd">Expected files against received files, landed automatically. Alert fires when the last pricing file arrives.</div></div><span class="min">1 min</span></li>
+</ol></div></div>
+<div class="wow" data-glean-id="ops-wow"><span class="eyebrow">Wow moment</span><p>Add a new bank account or entity by adding one row in the app. No new spreadsheet, no new macro. Growth without adding people.</p></div>
+<div class="prompts" data-glean-id="ops-prompts"><span class="eyebrow">Ask it in plain English</span><div class="prompt-list">
+<div class="prompt" data-glean-id="ops-prompt-1"><q>What is our total cash by bank counterparty and currency this morning, and what changed versus yesterday?</q><button type="button" class="copy" data-text="What is our total cash by bank counterparty and currency this morning, and what changed versus yesterday?">Copy</button></div>
+<div class="prompt" data-glean-id="ops-prompt-2"><q>Which reconciliation breaks over $250k are still open, and how long have they been open?</q><button type="button" class="copy" data-text="Which reconciliation breaks over $250k are still open, and how long have they been open?">Copy</button></div>
+<div class="prompt" data-glean-id="ops-prompt-3"><q>Show USD-equivalent exposure by entity and the unhedged non-USD amount.</q><button type="button" class="copy" data-text="Show USD-equivalent exposure by entity and the unhedged non-USD amount.">Copy</button></div>
+<div class="prompt" data-glean-id="ops-prompt-4"><q>Which banking counterparties hold more than 20% of our cash?</q><button type="button" class="copy" data-text="Which banking counterparties hold more than 20% of our cash?">Copy</button></div>
+</div></div>
+<div class="under"><div data-glean-id="ops-concerns"><span class="eyebrow">Concerns to land</span><div class="qa" style="margin-top:10px">
+<div class="qa-row" data-glean-id="ops-concern-1"><div class="q">How much can we get natively out of Snowflake?</div><div>Everything shown runs in Snowflake. One catalogue, one bill.</div></div>
+<div class="qa-row" data-glean-id="ops-concern-2"><div class="q">We&#x27;re not creating a time bomb for ourselves?</div><div>Version history, lineage, Time Travel and auto-drafted documentation.</div></div>
+<div class="qa-row" data-glean-id="ops-concern-3"><div class="q">How do we run this alongside production?</div><div>Side-by-side check against the legacy output, with Kipi.ai and the activation team.</div></div>
+</div></div><div data-glean-id="ops-caps"><span class="eyebrow">Snowflake capabilities shown</span><div class="tags">
+<span class="tag">Enfusion data share</span><span class="tag">Dynamic Tables</span><span class="tag">Tasks</span><span class="tag">Alerts</span><span class="tag">Streamlit in Snowflake</span><span class="tag">Snowflake Intelligence</span><span class="tag">Cortex Analyst</span><span class="tag">AI_COMPLETE</span><span class="tag">Git integration</span><span class="tag">Time Travel</span><span class="tag">Openflow</span>
+</div><div class="hook" data-glean-id="ops-hook"><span class="mono-label">BVA value hook</span>Ops headcount × share of day spent producing and checking reports, plus month-end effort, the reconciliation vendor fee and audit evidence.</div></div></div>
+</section>
+<section class="block" id="sec-risk" data-glean-id="section-risk" style="--seg-color: var(--artifact-seg-2)">
+<div class="sec-head" data-glean-id="risk-header"><div><div class="eyebrow"><span class="dot"></span>Section 02 · starts 0:17</div><h2>Risk</h2><div class="who">Jason Lai (CRO) and Sam Drury</div></div>
+<div class="timebadge"><div class="big">11<span style="font-size:1.2rem"> min</span></div><span class="eyebrow">runtime</span></div></div>
+<div class="stats" data-glean-id="risk-stats">
+<div class="stat" data-glean-id="risk-stat-1"><div class="v">20-30%</div><div class="l">of time on daily, weekly and monthly processing</div></div>
+<div class="stat" data-glean-id="risk-stat-2"><div class="v">~2 yrs</div><div class="l">of usable treasury time series today</div></div>
+<div class="stat" data-glean-id="risk-stat-3"><div class="v">4-5 hrs</div><div class="l">a week available for research</div></div>
+<div class="stat" data-glean-id="risk-stat-4"><div class="v">2</div><div class="l">people covering risk and hedge fund investments</div></div>
+</div>
+<div class="grid2"><div data-glean-id="risk-heard"><div class="col-title"><span class="eyebrow">What we heard</span><span class="info" tabindex="0" aria-label="Source">i<span class="tip">Summarised from the Risk interview, Jason Lai and Sam Drury (Gong, 25 Sep 2026). From Jason Lai and Sam Drury&#x27;s interview on 25 Sep 2026. These are their own estimates.</span></span></div><ul class="heard">
+<li>Enfusion is a snapshot. To compare with yesterday, Jason opens two reports.</li>
+<li>Every day they dump and compare data, investigate breaches, then reload or override.</li>
+<li>The book, strategy and product hierarchy is rigid, so regrouping P&amp;L is painful.</li>
+<li>Jason on VaR and Monte Carlo: “I need to understand where does the number come from.”</li>
+<li>Sam wants to check a calculation once, then reuse it as a column.</li>
+</ul><div class="need" data-glean-id="risk-need"><span class="eyebrow">What they need to see</span>Calculations they control, assumptions they can see and change, and results that persist. On top of full history.</div></div>
+<div data-glean-id="risk-steps"><div class="col-title"><span class="eyebrow">Show them</span><span class="progress-line" id="prog-risk"></span></div><ol class="steps" data-sec="risk">
+<li data-glean-id="risk-step-1" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">2.1 History and automated checks</div><div class="sd">Daily Enfusion snapshots build a time series, with ten years loadable on day one. Data quality checks surface only the breaches.</div></div><span class="min">2 min</span></li>
+<li data-glean-id="risk-step-2" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">2.2 Flexible hierarchy</div><div class="sd">Regroup P&amp;L by strategy, then product, then book, just by asking. The semantic view handles it.</div></div><span class="min">1 min</span></li>
+<li data-glean-id="risk-step-3" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">2.3 Transparent Monte Carlo VaR</div><div class="sd">Cortex Code writes the Snowpark Python from Sam&#x27;s prompt. Parameters are visible. Change the correlation matrix and watch the result move. Persist it and schedule it daily.</div></div><span class="min">4 min</span></li>
+<li data-glean-id="risk-step-4" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">2.4 Hedge fund monitoring</div><div class="sd">Marketplace benchmarks with rolling 3y and 5y correlations stored as columns. Golden-thread question part 2.</div></div><span class="min">2 min</span></li>
+<li data-glean-id="risk-step-5" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">2.5 CIO one-click view and stress test</div><div class="sd">Return attribution, contribution by hedge fund, and a parameterised oil-shock scenario.</div></div><span class="min">2 min</span></li>
+</ol></div></div>
+<div class="wow" data-glean-id="risk-wow"><span class="eyebrow">Wow moment</span><p>Sam adds a new calculation in plain English. It becomes a governed, scheduled column that he checks once and reuses everywhere.</p></div>
+<div class="prompts" data-glean-id="risk-prompts"><span class="eyebrow">Ask it in plain English</span><div class="prompt-list">
+<div class="prompt" data-glean-id="risk-prompt-1"><q>Compare portfolio exposure by strategy today, yesterday and one year ago.</q><button type="button" class="copy" data-text="Compare portfolio exposure by strategy today, yesterday and one year ago.">Copy</button></div>
+<div class="prompt" data-glean-id="risk-prompt-2"><q>Build a 1-day 99% Monte Carlo VaR for the treasury portfolio with 10,000 paths, using a 3-year EWMA covariance matrix.</q><button type="button" class="copy" data-text="Build a 1-day 99% Monte Carlo VaR for the treasury portfolio with 10,000 paths, using a 3-year EWMA covariance matrix.">Copy</button></div>
+<div class="prompt" data-glean-id="risk-prompt-3"><q>Which hedge funds have the highest correlation to global equities over the last 12 months, and how has that changed versus three years ago?</q><button type="button" class="copy" data-text="Which hedge funds have the highest correlation to global equities over the last 12 months, and how has that changed versus three years ago?">Copy</button></div>
+<div class="prompt" data-glean-id="risk-prompt-4"><q>Show USD-equivalent exposure by entity.</q><button type="button" class="copy" data-text="Show USD-equivalent exposure by entity.">Copy</button></div>
+</div></div>
+<div class="under"><div data-glean-id="risk-concerns"><span class="eyebrow">Concerns to land</span><div class="qa" style="margin-top:10px">
+<div class="qa-row" data-glean-id="risk-concern-1"><div class="q">Who controls the assumptions?</div><div>The user. Parameter cells and code are visible, versioned and reviewable.</div></div>
+<div class="qa-row" data-glean-id="risk-concern-2"><div class="q">Rubbish in, rubbish out?</div><div>Quality checks run before any calculation, and lineage shows every input.</div></div>
+<div class="qa-row" data-glean-id="risk-concern-3"><div class="q">Does our data leave LetterOne?</div><div>No. Models run inside Snowflake&#x27;s security perimeter.</div></div>
+</div></div><div data-glean-id="risk-caps"><span class="eyebrow">Snowflake capabilities shown</span><div class="tags">
+<span class="tag">Snowflake Notebooks</span><span class="tag">Snowpark Python</span><span class="tag">Cortex Code</span><span class="tag">Data Metric Functions</span><span class="tag">Semantic views</span><span class="tag">Snowflake Intelligence</span><span class="tag">Streamlit in Snowflake</span><span class="tag">Marketplace</span>
+</div><div class="hook" data-glean-id="risk-hook"><span class="mono-label">BVA value hook</span>Analyst time recaptured from assembly and checking, time to answer a new question, and the adoption test: dropping their parallel copy.</div></div></div>
+</section>
+<section class="block" id="sec-trading" data-glean-id="section-trading" style="--seg-color: var(--artifact-seg-3)">
+<div class="sec-head" data-glean-id="trading-header"><div><div class="eyebrow"><span class="dot"></span>Section 03 · starts 0:28</div><h2>Trading</h2><div class="who">Amy Abob and Matei Moprea (structured credit desk)</div></div>
+<div class="timebadge"><div class="big">11<span style="font-size:1.2rem"> min</span></div><span class="eyebrow">runtime</span></div></div>
+<div class="stats" data-glean-id="trading-stats">
+<div class="stat" data-glean-id="trading-stat-1"><div class="v">~145</div><div class="l">CLO and ABS lines in the portfolio</div></div>
+<div class="stat" data-glean-id="trading-stat-2"><div class="v">300-400</div><div class="l">pages per new-issue CLO document</div></div>
+<div class="stat" data-glean-id="trading-stat-3"><div class="v">10-20%</div><div class="l">of the week spent on manual work</div></div>
+<div class="stat" data-glean-id="trading-stat-4"><div class="v">3</div><div class="l">people on the desk</div></div>
+</div>
+<div class="grid2"><div data-glean-id="trading-heard"><div class="col-title"><span class="eyebrow">What we heard</span><span class="info" tabindex="0" aria-label="Source">i<span class="tip">Summarised from the Trading interview, Amy Abob and Matei Moprea (Gong, 24 Sep 2026). From Amy Abob and Matei Moprea&#x27;s interview on 24 Sep 2026. These are their own estimates.</span></span></div><ul class="heard">
+<li>“Excel is our backbone.” The flow is Intex to Excel to Perplexity dashboards.</li>
+<li>Trustee reports are reviewed by clicking through Intex, deal by deal.</li>
+<li>New-issue documents are compared by hand against past deals and the market.</li>
+<li>AI dashboards still get sense-checked by hand against Intex.</li>
+<li>Matei wants an answer that “would be the same no matter who asks it”.</li>
+</ul><div class="need" data-glean-id="trading-need"><span class="eyebrow">What they need to see</span>The CLO book in one governed place, AI answers they don&#x27;t have to re-check, and hundreds of pages turned into comparable data.</div></div>
+<div data-glean-id="trading-steps"><div class="col-title"><span class="eyebrow">Show them</span><span class="progress-line" id="prog-trading"></span></div><ol class="steps" data-sec="trading">
+<li data-glean-id="trading-step-1" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">3.1 One structured credit ledger</div><div class="sd">Enfusion positions plus Intex output plus Bloomberg DL+. One governed row per tranche: manager, vintage, rating, spread, WAL.</div></div><span class="min">2 min</span></li>
+<li data-glean-id="trading-step-2" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">3.2 Ask the Structured Credit agent</div><div class="sd">Ask as Amy, then as Matei. Same question, same answer.</div></div><span class="min">3 min</span></li>
+<li data-glean-id="trading-step-3" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">3.3 Trustee report to trend in minutes</div><div class="sd">Drop PDFs into a stage live. AI_EXTRACT pulls OC/IC cushions, WARF and the CCC bucket. Trend and alert.</div></div><span class="min">3 min</span></li>
+<li data-glean-id="trading-step-4" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">3.4 CLO document comparison</div><div class="sd">Cortex Search over their own document library returns a clause comparison with page references. Complements DealScribe, with no enquiry limit.</div></div><span class="min">2 min</span></li>
+<li data-glean-id="trading-step-5" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">3.5 Monthly management summary<span class="opt">optional</span></div><div class="sd">Auto-built exposures and watchlist, with a commentary draft for Amy to edit.</div></div><span class="min">1 min</span></li>
+</ol></div></div>
+<div class="wow" data-glean-id="trading-wow"><span class="eyebrow">Wow moment</span><p>A trustee report PDF goes in, and minutes later it&#x27;s trended, queryable data with an alert set. No Excel step.</p></div>
+<div class="prompts" data-glean-id="trading-prompts"><span class="eyebrow">Ask it in plain English</span><div class="prompt-list">
+<div class="prompt" data-glean-id="trading-prompt-1"><q>What is our exposure by CLO manager and rating, and how has it changed since last month&#x27;s marks?</q><button type="button" class="copy" data-text="What is our exposure by CLO manager and rating, and how has it changed since last month&#x27;s marks?">Copy</button></div>
+<div class="prompt" data-glean-id="trading-prompt-2"><q>Which tranches are past their non-call date with a spread above the current new-issue level?</q><button type="button" class="copy" data-text="Which tranches are past their non-call date with a spread above the current new-issue level?">Copy</button></div>
+<div class="prompt" data-glean-id="trading-prompt-3"><q>Which deals saw the CCC bucket rise by more than one point versus the prior trustee report?</q><button type="button" class="copy" data-text="Which deals saw the CCC bucket rise by more than one point versus the prior trustee report?">Copy</button></div>
+<div class="prompt" data-glean-id="trading-prompt-4"><q>Compare the reinvestment period and CCC haircut language in this new issue with our three latest holdings from the same manager.</q><button type="button" class="copy" data-text="Compare the reinvestment period and CCC haircut language in this new issue with our three latest holdings from the same manager.">Copy</button></div>
+</div></div>
+<div class="under"><div data-glean-id="trading-concerns"><span class="eyebrow">Concerns to land</span><div class="qa" style="margin-top:10px">
+<div class="qa-row" data-glean-id="trading-concern-1"><div class="q">Will the AI give different answers to different people?</div><div>No. Same semantic view and verified queries, as shown live.</div></div>
+<div class="qa-row" data-glean-id="trading-concern-2"><div class="q">Is this replacing Intex or DealScribe?</div><div>No. Intex stays the pricing standard. Snowflake holds the output and joins it with everything else.</div></div>
+<div class="qa-row" data-glean-id="trading-concern-3"><div class="q">Do we need to rebuild pricing?</div><div>No. Only the outputs move out of Excel.</div></div>
+</div></div><div data-glean-id="trading-caps"><span class="eyebrow">Snowflake capabilities shown</span><div class="tags">
+<span class="tag">AI_EXTRACT</span><span class="tag">AI_PARSE_DOCUMENT</span><span class="tag">Cortex Search</span><span class="tag">Snowflake Intelligence</span><span class="tag">Verified queries</span><span class="tag">Marketplace (Bloomberg DL+)</span><span class="tag">Alerts</span><span class="tag">Streamlit in Snowflake</span>
+</div><div class="hook" data-glean-id="trading-hook"><span class="mono-label">BVA value hook</span>10-20% manual time recaptured, fewer requests to Ops, and capacity to cover new asset classes. That&#x27;s a revenue story, not just cost.</div></div></div>
+</section>
+<section class="block" id="sec-dl" data-glean-id="section-dl" style="--seg-color: var(--artifact-seg-4)">
+<div class="sec-head" data-glean-id="dl-header"><div><div class="eyebrow"><span class="dot"></span>Section 04 · starts 0:39</div><h2>Direct Lending</h2><div class="who">Daniele Gualdani (Direct Investments)</div></div>
+<div class="timebadge"><div class="big">11<span style="font-size:1.2rem"> min</span></div><span class="eyebrow">runtime</span></div></div>
+<div class="stats" data-glean-id="dl-stats">
+<div class="stat" data-glean-id="dl-stat-1"><div class="v">~100</div><div class="l">deals reviewed so far this year</div></div>
+<div class="stat" data-glean-id="dl-stat-2"><div class="v">3-4</div><div class="l">deals closed per year</div></div>
+<div class="stat" data-glean-id="dl-stat-3"><div class="v">30%+</div><div class="l">of time validating counterparty data and models</div></div>
+<div class="stat" data-glean-id="dl-stat-4"><div class="v">3 → 1</div><div class="l">days per first review (the goal)</div></div>
+</div>
+<div class="grid2"><div data-glean-id="dl-heard"><div class="col-title"><span class="eyebrow">What we heard</span><span class="info" tabindex="0" aria-label="Source">i<span class="tip">Summarised from the Direct Lending interview, Daniele Gualdani (Gong, 28 Sep 2026). From Daniele Gualdani&#x27;s interview on 28 Sep 2026 and the Zoom meeting summary. These are her own estimates.</span></span></div><ul class="heard">
+<li>Excel and PDFs arrive by email or through a different VDR for every deal, then go into live, dead and closed folders.</li>
+<li>Every deal needs a check that the model matches the PDF, and “every time there&#x27;s an issue”.</li>
+<li>She uses ChatGPT as an extra analyst for those checks.</li>
+<li>Quarterly borrower packs are reviewed by hand against the underwriting case.</li>
+<li>The team turns deals away because it doesn&#x27;t have the capacity.</li>
+</ul><div class="need" data-glean-id="dl-need"><span class="eyebrow">What they need to see</span>Counterparty files turned into validated, comparable data. Faster first review, memory across 100+ deals, and automated monitoring.</div></div>
+<div data-glean-id="dl-steps"><div class="col-title"><span class="eyebrow">Show them</span><span class="progress-line" id="prog-dl"></span></div><ol class="steps" data-sec="dl">
+<li data-glean-id="dl-step-1" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">4.1 The deal room</div><div class="sd">Point Snowflake at a synthetic copy of the shared folder. AI_CLASSIFY tags every file: model, IM, valuation, legal, monitoring.</div></div><span class="min">2 min</span></li>
+<li data-glean-id="dl-step-2" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">4.2 Model versus IM check</div><div class="sd">AI_EXTRACT pulls price, NOI, rent growth, exit yield, LTV and IRR from both files. Mismatches are flagged to the source, and a Q&amp;A list is drafted.</div></div><span class="min">3 min</span></li>
+<li data-glean-id="dl-step-3" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">4.3 Memory across 100+ deals</div><div class="sd">Cortex Search across live, dead and closed deals: past assumptions and reasons for passing.</div></div><span class="min">2 min</span></li>
+<li data-glean-id="dl-step-4" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">4.4 IC paper first draft</div><div class="sd">The agent assembles background, track record and market context with citations. Daniele edits the draft rather than writing from scratch.</div></div><span class="min">2 min</span></li>
+<li data-glean-id="dl-step-5" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><div><div class="st">4.5 Post-investment monitoring</div><div class="sd">Quarterly packs are compared automatically with the prior quarter and the underwriting case, with covenant headroom flagged.</div></div><span class="min">2 min</span></li>
+</ol></div></div>
+<div class="wow" data-glean-id="dl-wow"><span class="eyebrow">Wow moment</span><p>Switch to a Trading user and ask about a live deal. Access is refused. Deal data is visible only to Direct Lending.</p></div>
+<div class="prompts" data-glean-id="dl-prompts"><span class="eyebrow">Ask it in plain English</span><div class="prompt-list">
+<div class="prompt" data-glean-id="dl-prompt-1"><q>Have we looked at student housing in Spain or Germany before? What rent growth did those counterparties assume, and why did we pass?</q><button type="button" class="copy" data-text="Have we looked at student housing in Spain or Germany before? What rent growth did those counterparties assume, and why did we pass?">Copy</button></div>
+<div class="prompt" data-glean-id="dl-prompt-2"><q>Check this operating model against the IM and list every figure that doesn&#x27;t match.</q><button type="button" class="copy" data-text="Check this operating model against the IM and list every figure that doesn&#x27;t match.">Copy</button></div>
+<div class="prompt" data-glean-id="dl-prompt-3"><q>Which closed deals are tracking more than 5% below underwriting-case NOI?</q><button type="button" class="copy" data-text="Which closed deals are tracking more than 5% below underwriting-case NOI?">Copy</button></div>
+<div class="prompt" data-glean-id="dl-prompt-4"><q>Draft the counterparty background section of the IC paper for this deal, with sources.</q><button type="button" class="copy" data-text="Draft the counterparty background section of the IC paper for this deal, with sources.">Copy</button></div>
+</div></div>
+<div class="under"><div data-glean-id="dl-concerns"><span class="eyebrow">Concerns to land</span><div class="qa" style="margin-top:10px">
+<div class="qa-row" data-glean-id="dl-concern-1"><div class="q">Can I get short-term data access for one deal?</div><div>Delivery through the Marketplace is instant. Commercial flexibility varies by vendor.</div></div>
+<div class="qa-row" data-glean-id="dl-concern-2"><div class="q">How is this different from ChatGPT?</div><div>It&#x27;s governed, logged and repeatable, and it sits next to your own data.</div></div>
+<div class="qa-row" data-glean-id="dl-concern-3"><div class="q">Do we have to change how we store deals?</div><div>No. We point at the existing folder structure.</div></div>
+</div></div><div data-glean-id="dl-caps"><span class="eyebrow">Snowflake capabilities shown</span><div class="tags">
+<span class="tag">AI_CLASSIFY</span><span class="tag">AI_EXTRACT</span><span class="tag">AI_PARSE_DOCUMENT</span><span class="tag">AI_COMPLETE</span><span class="tag">Cortex Search</span><span class="tag">Snowflake Intelligence</span><span class="tag">Row access policies</span><span class="tag">Marketplace</span>
+</div><div class="hook" data-glean-id="dl-hook"><span class="mono-label">BVA value hook</span>30%+ of time on validation, review cut from days to hours, more deals assessed, and duplicated build avoided. This is the reason for a three-year platform commitment.</div></div></div>
+</section>
+
+<section class="block" id="sec-close" data-glean-id="section-close" style="--seg-color: var(--artifact-seg-n)">
+  <div class="sec-head">
+    <div><div class="eyebrow"><span class="dot"></span>Close · starts 0:50</div><h2>Build it, govern it, scale it</h2><div class="who">Bring all four teams back to one platform.</div></div>
+    <div class="timebadge"><div class="big">5<span style="font-size:1.2rem"> min</span></div><span class="eyebrow">runtime</span></div>
+  </div>
+  <div class="close-grid">
+    <div class="close-card" data-glean-id="close-lineage"><span class="n">01</span><h3>Golden-thread lineage</h3><p>One exposure metric traced from Enfusion to both agents.</p></div>
+    <div class="close-card" data-glean-id="close-build"><span class="n">02</span><h3>Built in 60 seconds</h3><p>Cortex Code turns one prompt into a new view and chart, like Dmitry's Streamlit work but governed.</p></div>
+    <div class="close-card" data-glean-id="close-mcp"><span class="n">03</span><h3>AI where they already work</h3><p>MCP connects a governed agent to Copilot with the same access rules.</p></div>
+    <div class="close-card" data-glean-id="close-cost"><span class="n">04</span><h3>Spend tied to value</h3><p>Budgets and consumption tracked for each team.</p></div>
+    <div class="close-card" data-glean-id="close-delivery"><span class="n">05</span><h3>Weeks, not months</h3><p>Phase 1 in 10-12 weeks with Kipi.ai, then six-week increments.</p></div>
+  </div>
+</section>
+
+<section class="block" id="sec-next" data-glean-id="section-next" style="--seg-color: var(--artifact-seg-n)">
+  <div class="sec-head">
+    <div><div class="eyebrow"><span class="dot"></span>Next steps · starts 0:55 · Cian</div><h2>Leave with a decision path</h2></div>
+    <div class="timebadge"><div class="big">5<span style="font-size:1.2rem"> min</span></div><span class="eyebrow">runtime</span></div>
+  </div>
+  <div class="next">
+    <div data-glean-id="next-bva"><span class="mono-label">01 · BVA readout</span>Lawrence plays back the numbers from all four interviews.</div>
+    <div data-glean-id="next-scope"><span class="mono-label">02 · Phase 1 scope</span>Start with the heaviest of the 30 daily spreadsheets.</div>
+    <div data-glean-id="next-ref"><span class="mono-label">03 · Peer call</span>A COO from a firm running Enfusion on Snowflake (Broadreach or Svelland).</div>
+    <div data-glean-id="next-followup"><span class="mono-label">04 · Follow-ups</span>Monte Carlo pack for Risk, plus a recording for anyone who missed the session.</div>
+  </div>
+</section>
+
+<section class="block" id="kit" data-glean-id="section-build-kit">
+  <div class="sec-head"><div><div class="eyebrow">For Colm · before the day</div><h2>Build kit</h2><div class="who">All synthetic data, shaped like LetterOne's. No real data without Steven's agreement.</div></div></div>
+  <div class="two">
+    <div>
+      <span class="eyebrow">Synthetic datasets</span>
+      <div class="tbl-wrap" style="margin-top:10px"><table data-glean-id="data-table"><thead><tr><th>Dataset</th><th>Used in</th></tr></thead><tbody><tr data-glean-id="data-1"><td>Enfusion trades, positions, P&amp;L, cash (3+ yrs daily)</td><td class="muted">All sections</td></tr><tr data-glean-id="data-2"><td>Bank and custodian statements, 300+ accounts, seeded breaks</td><td class="muted">Ops</td></tr><tr data-glean-id="data-3"><td>External file arrival log and legacy spreadsheet outputs</td><td class="muted">Ops</td></tr><tr data-glean-id="data-4"><td>Hedge fund returns, 20-30 funds, 5+ yrs</td><td class="muted">Risk</td></tr><tr data-glean-id="data-5"><td>Market benchmarks, FX, rates, oil via Marketplace</td><td class="muted">Risk, Trading</td></tr><tr data-glean-id="data-6"><td>CLO/ABS book (~145 tranches) plus 6 months of trustee PDFs</td><td class="muted">Trading</td></tr><tr data-glean-id="data-7"><td>3-4 long synthetic CLO offering documents</td><td class="muted">Trading</td></tr><tr data-glean-id="data-8"><td>~20 deal folders with models, IMs and seeded mismatches</td><td class="muted">Direct Lending</td></tr><tr data-glean-id="data-9"><td>Quarterly operator reports, one under-performing</td><td class="muted">Direct Lending</td></tr></tbody></table></div>
+      <div style="margin-top:30px"><span class="eyebrow">Roles for live access switching</span>
+      <div class="tbl-wrap" style="margin-top:10px"><table data-glean-id="roles-table"><thead><tr><th>Role</th><th>Sees</th></tr></thead><tbody><tr data-glean-id="role-treasury_ops"><td class="mono">TREASURY_OPS</td><td class="muted">Positions, cash, recs, rules</td></tr><tr data-glean-id="role-risk"><td class="mono">RISK</td><td class="muted">Full treasury book, hedge funds, models</td></tr><tr data-glean-id="role-trading_sc"><td class="mono">TRADING_SC</td><td class="muted">Structured credit book, trustee data, CLO documents</td></tr><tr data-glean-id="role-direct_lending"><td class="mono">DIRECT_LENDING</td><td class="muted">Deal library and monitoring (visible to this role only)</td></tr><tr data-glean-id="role-exec_readonly"><td class="mono">EXEC_READONLY</td><td class="muted">Dashboards and summary views</td></tr></tbody></table></div></div>
+    </div>
+    <div>
+      <div class="col-title"><span class="eyebrow">Prep checklist</span><span class="progress-line" id="prog-prep"></span></div>
+      <div id="prep" data-glean-id="prep-checklist"><div class="checkrow" data-glean-id="prep-1" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Confirm demo date and attendees with Steven</span><span class="o">Cian</span></div><div class="checkrow" data-glean-id="prep-2" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Agree the synthetic-data approach with Steven and Dmitry</span><span class="o">Cian</span></div><div class="checkrow" data-glean-id="prep-3" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Build synthetic datasets and the five roles</span><span class="o">Colm</span></div><div class="checkrow" data-glean-id="prep-4" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Build four agents, the semantic view and verified queries</span><span class="o">Colm</span></div><div class="checkrow" data-glean-id="prep-5" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Streamlit apps: Ops control dashboard and CIO view</span><span class="o">Colm</span></div><div class="checkrow" data-glean-id="prep-6" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Confirm Intex and Moody&#x27;s on the Marketplace (don&#x27;t claim until confirmed)</span><span class="o">Colm</span></div><div class="checkrow" data-glean-id="prep-7" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Match Enfusion table shapes to the Kipi.ai scope</span><span class="o">Colm + Kipi.ai</span></div><div class="checkrow" data-glean-id="prep-8" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Map the BVA value hooks to each section</span><span class="o">Lawrence</span></div><div class="checkrow" data-glean-id="prep-9" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Send the Monte Carlo follow-up to Jason and Sam</span><span class="o">Cian</span></div><div class="checkrow" data-glean-id="prep-10" role="checkbox" aria-checked="false" tabindex="0"><span class="check"></span><span class="t">Internal dry run, timed to 55 minutes</span><span class="o">All</span></div></div>
+      <div style="margin-top:30px" data-glean-id="rules-of-thumb"><span class="eyebrow">Rules of the room</span>
+        <ul class="plain">
+          <li>Ask in plain English first. Show code only when someone asks.</li>
+          <li>After every AI answer, open the SQL or the source page.</li>
+          <li>Switch roles live at least twice.</li>
+          <li>Rehearse every prompt three times, fix the model choice, and load verified queries.</li>
+          <li>Running late? Cut steps 1.5 and 3.5 first. Never cut the governance moments.</li>
+          <li>Don't describe Direct Lending as part of Treasury, because its reporting line isn't confirmed.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer data-glean-id="footer">LetterOne demo run of show · internal to Snowflake · companion to the LetterOne Demo Specification (Markdown).</footer>
+</main>
+
+<script>
+(function(){
+  var SEGS = [{"k": "open", "l": "Opening", "a": 0, "b": 5}, {"k": "ops", "l": "COO Ops", "a": 5, "b": 17}, {"k": "risk", "l": "Risk", "a": 17, "b": 28}, {"k": "trading", "l": "Trading", "a": 28, "b": 39}, {"k": "dl", "l": "Direct Lending", "a": 39, "b": 50}, {"k": "close", "l": "Close", "a": 50, "b": 55}, {"k": "next", "l": "Next steps", "a": 55, "b": 60}];
+  var TOTAL = 60*60, elapsed = 0, timer = null, last = 0;
+  var clock = document.getElementById('clock'), now = document.getElementById('now');
+  var startBtn = document.getElementById('startBtn');
+  function fmt(s){ s=Math.max(0,Math.floor(s)); var m=Math.floor(s/60), r=s%60; return (m<10?'0':'')+m+':'+(r<10?'0':'')+r; }
+  function segEl(k){ return document.querySelector('.seg[data-seg="'+k+'"]'); }
+  function render(){
+    clock.textContent = fmt(elapsed);
+    var mins = elapsed/60, cur = null;
+    SEGS.forEach(function(s){
+      var el = segEl(s.k), f = el.querySelector('.fill');
+      var p = Math.min(1, Math.max(0, (mins - s.a)/(s.b - s.a)));
+      f.style.width = (p*100)+'%';
+      if (mins >= s.a && mins < s.b) cur = s;
+    });
+    if (elapsed > 0 && cur) {
+      now.innerHTML = 'Now: <b>'+cur.l+'</b> · '+fmt((cur.b*60)-elapsed)+' left in section';
+    } else if (elapsed >= TOTAL) { now.innerHTML = '<b>Time.</b> Hard stop.'; }
+  }
+  function tick(){ var t = Date.now(); elapsed += (t-last)/1000; last = t; if (elapsed >= TOTAL){ elapsed = TOTAL; stop(); } render(); }
+  function stop(){ clearInterval(timer); timer = null; startBtn.textContent = elapsed>0 && elapsed<TOTAL ? 'Resume' : 'Start'; }
+  startBtn.addEventListener('click', function(){
+    if (timer) { stop(); return; }
+    last = Date.now(); timer = setInterval(tick, 500); startBtn.textContent = 'Pause';
+  });
+  document.getElementById('resetBtn').addEventListener('click', function(){ stop(); elapsed = 0; startBtn.textContent='Start'; now.textContent='Press start when the demo begins'; render(); });
+
+  // jump + scroll spy
+  document.querySelectorAll('.seg').forEach(function(b){
+    b.addEventListener('click', function(){ var t = document.getElementById('sec-'+b.dataset.seg); if (t) t.scrollIntoView({behavior:'smooth', block:'start'}); });
+  });
+  document.querySelectorAll('[data-jump]').forEach(function(b){
+    b.addEventListener('click', function(){ var t = document.getElementById(b.dataset.jump); if (t) t.scrollIntoView({behavior:'smooth'}); });
+  });
+  var secs = SEGS.map(function(s){ return document.getElementById('sec-'+s.k); });
+  function spy(){
+    var y = window.scrollY + 160, active = null;
+    secs.forEach(function(el, i){ if (el && el.offsetTop <= y) active = SEGS[i].k; });
+    document.querySelectorAll('.seg').forEach(function(b){ b.classList.toggle('active', b.dataset.seg === active); });
+  }
+  window.addEventListener('scroll', spy, {passive:true}); spy();
+
+  // sources drawer
+  document.getElementById('srcBtn').addEventListener('click', function(){ document.getElementById('drawer').classList.toggle('open'); });
+
+  // step + prep checklists
+  function wireChecks(container, rowSel, progEl){
+    var rows = container.querySelectorAll(rowSel);
+    function upd(){ var d = container.querySelectorAll(rowSel+'.done').length; if (progEl) progEl.textContent = d+' of '+rows.length+' done'; }
+    rows.forEach(function(r){
+      function toggle(){ r.classList.toggle('done'); var on = r.classList.contains('done'); r.setAttribute('aria-checked', on?'true':'false'); r.querySelector('.check').textContent = on ? '\u2713' : ''; upd(); }
+      r.addEventListener('click', toggle);
+      r.addEventListener('keydown', function(e){ if (e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(); } });
+    });
+    upd();
+  }
+  document.querySelectorAll('ol.steps').forEach(function(ol){ wireChecks(ol, 'li', document.getElementById('prog-'+ol.dataset.sec)); });
+  wireChecks(document.getElementById('prep'), '.checkrow', document.getElementById('prog-prep'));
+
+  // copy prompts
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click', function(e){
+      e.stopPropagation();
+      var txt = b.getAttribute('data-text');
+      function done(){ b.textContent='Copied'; b.classList.add('ok'); setTimeout(function(){ b.textContent='Copy'; b.classList.remove('ok'); }, 1400); }
+      function fallback(){ var ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(err){} document.body.removeChild(ta); done(); }
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt).then(done, fallback); } else { fallback(); }
+    });
+  });
+  render();
+})();
+</script>
+
+<script>
+  if (window.GleanBridge) {
+  window.GleanBridge.postMessage({
+    actionId: 'export-pdf',
+    type: 'glean-add-menu',
+    metadata: { label: 'Export as PDF', icon: 'export' }
+  });
+  window.GleanBridge.onMessage('action', function(data) {
+    if (data.actionId === 'export-pdf') window.print();
+  });
+  }
+  function prepareChartsForPrint() {
+    if (typeof echarts === 'undefined') return;
+    document.querySelectorAll('[_echarts_instance_]').forEach(function(el) {
+      var chart = echarts.getInstanceByDom(el);
+      if (!chart) return;
+      var img = new Image();
+      img.src = chart.getDataURL({ type: 'png', pixelRatio: 2 });
+      img.className = 'print-chart-img';
+      img.style.cssText = 'width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;z-index:10;';
+      el.dataset.prevPosition = el.style.position;
+      el.style.position = 'relative';
+      el.appendChild(img);
+    });
+  }
+  function cleanUpAfterPrint() {
+    document.querySelectorAll('[_echarts_instance_]').forEach(function(el) {
+      var img = el.querySelector('.print-chart-img');
+      if (!img) return;
+      img.remove();
+      el.style.position = el.dataset.prevPosition || '';
+      delete el.dataset.prevPosition;
+    });
+  }
+  window.addEventListener('beforeprint', prepareChartsForPrint);
+  window.addEventListener('afterprint', cleanUpAfterPrint);
+</script>
+</body>
+</html>

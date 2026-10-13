@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CMO Discovery Questions - Snowflake</title>
+  <style>
+    @media print {
+      body { font-size: 11pt; }
+      .page-break { page-break-before: always; }
+      .no-break { page-break-inside: avoid; }
+    }
+    body {
+      font-family: 'Calibri', 'Segoe UI', sans-serif;
+      max-width: 780px; width: 100%; box-sizing: border-box;
+      margin: 0 auto; padding: 48px 40px;
+      color: #1f2937; background: #fff;
+      line-height: 1.7;
+    }
+    h1 { color: #29B5E8; font-size: 26px; margin-bottom: 4px; border-bottom: 3px solid #29B5E8; padding-bottom: 10px; }
+    h2 { color: #1e3a5f; font-size: 18px; margin-top: 32px; margin-bottom: 4px; }
+    .subtitle { color: #6b7280; font-size: 13px; margin-bottom: 32px; }
+    .question-block { margin-bottom: 28px; border-left: 4px solid #29B5E8; padding: 16px 20px; background: #f8fafc; border-radius: 0 6px 6px 0; }
+    .question-number { color: #29B5E8; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .question-text { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+    .detail-row { margin-bottom: 6px; font-size: 13px; }
+    .detail-label { font-weight: 700; color: #1e3a5f; display: inline; }
+    .detail-value { display: inline; color: #374151; }
+    table { border-collapse: collapse; width: 100%; font-size: 12px; margin-top: 24px; }
+    th, td { border: 1px solid #d1d5db; padding: 8px 12px; text-align: left; vertical-align: top; }
+    th { background: #29B5E8; color: #fff; font-weight: 600; }
+    tr:nth-child(even) { background: #f8fafc; }
+    .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e7eb; color: #9ca3af; font-size: 11px; text-align: center; }
+    .intro { font-size: 14px; color: #374151; margin-bottom: 24px; }
+    .tip { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #1e40af; margin: 24px 0; }
+  </style>
+</head>
+<body>
+
+  <h1>CMO Discovery Questions</h1>
+  <p class="subtitle">Snowflake Sales Discovery Framework &mdash; Chief Marketing Officer Persona</p>
+
+  <p class="intro">The following 10 discovery questions are designed to uncover a CMO's key business challenges, desired outcomes, and success metrics. Each question maps to a Snowflake capability that addresses the underlying pain point. Use these to guide a consultative conversation, not as a rigid script.</p>
+
+  <div class="tip"><strong>Tip:</strong> Lead with the business challenge, not the technology. CMOs care about revenue, customer engagement, and speed to market &mdash; not data platform architecture. Let their answers guide you to the relevant Snowflake capability.</div>
+
+  <!-- Question 1 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 1 &mdash; Customer 360</div>
+    <div class="question-text">"How confident are you today that your team has a single, unified view of every customer across all your channels and touchpoints?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Customer data siloed across CRM, web analytics, email platforms, ad tech, and point-of-sale systems. Marketing teams make decisions on partial data.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">A unified customer profile that combines first-party, second-party, and third-party data for hyper-personalised campaigns and journey orchestration.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Customer Lifetime Value (CLV), cross-sell/upsell conversion rate, campaign response rate by segment, data integration latency.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Snowflake as a single platform to consolidate all customer data; Snowpark for identity resolution; Marketplace for third-party data enrichment.</span></div>
+  </div>
+
+  <!-- Question 2 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 2 &mdash; Marketing Attribution</div>
+    <div class="question-text">"When you report marketing ROI to the board, how much of your spend can you confidently attribute to actual revenue?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Inability to connect marketing spend to revenue outcomes. Last-click attribution overstates some channels and undervalues others. Board loses trust in marketing numbers.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">Multi-touch attribution model that accurately credits each channel and campaign, enabling confident budget reallocation.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Return on Ad Spend (ROAS), Cost per Acquisition (CPA), attributed revenue by channel, marketing-sourced pipeline %.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Centralised data platform to join ad spend, CRM, and revenue data; Snowpark ML for custom attribution models; near-real-time data sharing with agency partners.</span></div>
+  </div>
+
+  <!-- Question 3 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 3 &mdash; Speed to Insight</div>
+    <div class="question-text">"How long does it take your team to go from 'we have a question' to 'we have a data-backed answer' &mdash; hours, days, or weeks?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Marketing analysts bottlenecked by slow queries, IT ticket queues for data access, and stitching together exports from multiple tools. Campaign windows close before insights arrive.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">Self-service analytics where marketing teams can answer their own questions in minutes without waiting on engineering.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Time to insight (hours &rarr; minutes), number of ad-hoc queries per analyst per week, analyst-to-IT request ratio.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Elastic compute (no queuing), governed data sharing across departments, Cortex Analyst for natural-language querying, Streamlit for self-service dashboards.</span></div>
+  </div>
+
+  <!-- Question 4 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 4 &mdash; Personalisation at Scale</div>
+    <div class="question-text">"How close are you to delivering truly personalised experiences to each customer, rather than broad segment-based campaigns?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Personalisation limited to basic segments (e.g. age, location). Unable to act on real-time behavioural signals. Competitors are delivering 1:1 experiences.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">AI-driven micro-segmentation and real-time personalisation across email, web, app, and paid media.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Engagement rate, conversion rate by personalisation tier, email click-through rate, average order value uplift.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Snowpark ML for propensity models and next-best-action; Cortex AI functions for sentiment and classification; Snowflake Marketplace for behavioural data enrichment.</span></div>
+  </div>
+
+  <!-- Question 5 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 5 &mdash; Data Collaboration &amp; Clean Rooms</div>
+    <div class="question-text">"How are you currently measuring campaign overlap or shared audiences with your media and retail partners &mdash; and how much manual effort does that take?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Sharing customer data with partners for measurement or activation requires risky data exports, complex legal agreements, or expensive intermediaries. Privacy regulations make this harder every year.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">Privacy-safe data collaboration with media partners, retailers, and publishers without moving or exposing raw data.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Audience overlap %, incremental reach, partner co-marketing ROI, time to activate a partner data collaboration.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Snowflake Data Clean Rooms for privacy-safe audience overlap and measurement; Secure Data Sharing for zero-copy partner collaboration; Marketplace for data monetisation.</span></div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- Question 6 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 6 &mdash; First-Party Data Strategy</div>
+    <div class="question-text">"With third-party cookies going away and privacy regulations tightening, how prepared is your team to build a first-party data strategy that maintains your targeting effectiveness?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Dependence on third-party cookies and data brokers for audience targeting. GDPR, CCPA, and cookie deprecation threaten existing acquisition strategies.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">A robust first-party data asset that powers targeting, measurement, and personalisation without reliance on third-party tracking.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">First-party data coverage (% of known customers), consent/opt-in rate, targeting match rate, cost-per-acquisition trend post-cookie.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Centralised consent-aware data platform; identity resolution via Snowpark; Clean Rooms for activation without data leakage; Marketplace for privacy-compliant enrichment.</span></div>
+  </div>
+
+  <!-- Question 7 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 7 &mdash; Real-Time Campaign Optimisation</div>
+    <div class="question-text">"If a campaign is underperforming right now, how quickly can your team detect it and make an adjustment &mdash; same day, next day, or next reporting cycle?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Campaign performance data arrives in batch (daily or weekly). By the time underperformance is detected, budget has been wasted. No ability to optimise in-flight.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">Near-real-time campaign dashboards with automated alerts and the ability to adjust spend, creative, or targeting within hours.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Data freshness (batch lag &rarr; minutes), budget waste recaptured, in-flight optimisation frequency, campaign pacing accuracy.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Snowpipe Streaming for near-real-time ingestion; Dynamic Tables for continuously refreshed campaign views; Cortex AI for anomaly detection; Streamlit for live dashboards.</span></div>
+  </div>
+
+  <!-- Question 8 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 8 &mdash; Martech Stack Complexity</div>
+    <div class="question-text">"How many marketing tools does your team use today, and what percentage of your team's time is spent moving data between them rather than acting on it?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Sprawling martech stack (average enterprise has 90+ tools). Each tool has its own data silo. Integration is fragile, expensive, and consumes analyst time.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">A central data platform that serves as the single source of truth, with connectors to activate data in downstream tools without manual ETL.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Number of data integration points, analyst time spent on data prep vs. analysis, ETL pipeline failure rate, total martech spend.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Openflow for native data ingestion; partner connectors (Fivetran, Airbyte); reverse ETL to push segments to ad platforms; single platform replacing point-to-point integrations.</span></div>
+  </div>
+
+  <!-- Question 9 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 9 &mdash; AI-Powered Marketing</div>
+    <div class="question-text">"Where are you on the journey of using AI and machine learning in your marketing &mdash; is it aspirational, experimental, or already driving decisions at scale?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">AI/ML adoption blocked by data access issues, lack of ML infrastructure, or dependence on a small data science team. Models exist in notebooks but never reach production.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">Production ML models for churn prediction, propensity scoring, content recommendation, and dynamic pricing &mdash; accessible to marketing users, not just data scientists.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Number of ML models in production, prediction accuracy, churn reduction %, revenue uplift from AI-driven recommendations.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Cortex AI (built-in LLM functions, sentiment, classification); Snowpark ML for custom models; Cortex Agents for natural-language marketing analytics; Model Registry for MLOps.</span></div>
+  </div>
+
+  <!-- Question 10 -->
+  <div class="question-block no-break">
+    <div class="question-number">Question 10 &mdash; Data Governance &amp; Trust</div>
+    <div class="question-text">"How often do different teams in your marketing org report different numbers for the same metric &mdash; and how much time is spent reconciling those differences?"</div>
+    <div class="detail-row"><span class="detail-label">Business Challenge: </span><span class="detail-value">Multiple versions of truth across teams. Campaign reports from the analytics team don't match the agency's numbers or the finance team's revenue figures. Trust in data erodes.</span></div>
+    <div class="detail-row"><span class="detail-label">Desired Outcome: </span><span class="detail-value">Governed, consistent metric definitions with role-based access &mdash; everyone sees the same numbers, with full lineage and audit trails.</span></div>
+    <div class="detail-row"><span class="detail-label">Key Metrics: </span><span class="detail-value">Time spent on data reconciliation, number of metric definition conflicts per quarter, data governance audit pass rate, time to onboard a new data consumer.</span></div>
+    <div class="detail-row"><span class="detail-label">Snowflake Relevance: </span><span class="detail-value">Snowflake Horizon (governance, lineage, classification, access policies); Semantic Views for consistent metric definitions; role-based access control; Universal Search for data discovery.</span></div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <h2>Quick Reference Summary</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Theme</th>
+        <th>Core Pain Point</th>
+        <th>Primary Snowflake Capability</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Customer 360</td><td>Siloed customer data</td><td>Unified platform, Marketplace, Snowpark</td></tr>
+      <tr><td>2</td><td>Attribution</td><td>Can't prove marketing ROI</td><td>Cross-source joins, Snowpark ML</td></tr>
+      <tr><td>3</td><td>Speed to Insight</td><td>Slow time-to-answer</td><td>Elastic compute, Cortex Analyst</td></tr>
+      <tr><td>4</td><td>Personalisation</td><td>Broad segments, not 1:1</td><td>Cortex AI, Snowpark ML</td></tr>
+      <tr><td>5</td><td>Data Collaboration</td><td>Risky data sharing with partners</td><td>Clean Rooms, Secure Data Sharing</td></tr>
+      <tr><td>6</td><td>First-Party Data</td><td>Cookie deprecation risk</td><td>Identity resolution, Clean Rooms</td></tr>
+      <tr><td>7</td><td>Real-Time Optimisation</td><td>Batch-lag kills campaign ROI</td><td>Snowpipe Streaming, Dynamic Tables</td></tr>
+      <tr><td>8</td><td>Martech Complexity</td><td>90+ tools, manual data plumbing</td><td>Openflow, partner connectors</td></tr>
+      <tr><td>9</td><td>AI-Powered Marketing</td><td>ML stuck in notebooks</td><td>Cortex AI, Snowpark ML, Agents</td></tr>
+      <tr><td>10</td><td>Data Governance</td><td>Multiple versions of truth</td><td>Horizon, Semantic Views, RBAC</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <p>Snowflake &mdash; CMO Discovery Framework &mdash; Confidential</p>
+  </div>
+
+</body>
+</html>

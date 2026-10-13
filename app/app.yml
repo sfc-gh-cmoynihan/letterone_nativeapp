@@ -1,0 +1,11 @@
+profile:
+  label: "LetterOne Treasury"
+  description: "Governed Data & AI platform for Treasury Operations, Risk, Trading and Direct Lending"
+  icon: public/icon.svg
+
+install:
+  commands:
+    - ["npm", "ci", "--include=dev"]
+
+run:
+  command: ["node", ".next/standalone/server.js"]

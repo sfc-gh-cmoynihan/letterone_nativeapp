@@ -1,0 +1,29 @@
+definition_version: "2"
+
+entities:
+  L1_APP:
+    type: snowflake-app
+    identifier:
+      name: L1_APP
+      database: LETTERONE_DB
+      schema: PUBLIC
+    artifacts:
+      - src: ./*
+        dest: ./
+        ignore:
+          - node_modules
+          - .env*
+          - __pycache__
+          - "*.pyc"
+          - .next
+          - .git
+          - snowflake.log
+
+    query_warehouse: L1_WH
+    build_compute_pool:
+      name: ANDE_COMPUTE_POOL
+    build_eai:
+      name: ALLOW_ALL_EAI
+    service_eai:
+      name: ALLOW_ALL_EAI
+    code_workspace: USER$ADMIN.PUBLIC.SNOWFLAKE_APPS
