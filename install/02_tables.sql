@@ -271,6 +271,46 @@ CREATE OR REPLACE TABLE BUSINESS_RULES (
 );
 
 -- ============================================================================
+-- CALL INTELLIGENCE
+-- ============================================================================
+
+CREATE OR REPLACE TABLE EXECUTIVE_CALLS (
+    CALL_ID            VARCHAR(20),
+    COMPANY            VARCHAR(200),
+    CONTACT_NAME       VARCHAR(200),
+    CONTACT_ROLE       VARCHAR(100),
+    CALL_DATE          TIMESTAMP_NTZ(9),
+    DURATION_SECONDS   NUMBER(38,0),
+    CALLER             VARCHAR(100),
+    CALL_TYPE          VARCHAR(30),
+    SENTIMENT          VARCHAR(20),
+    TRANSCRIPTION      VARCHAR(16777216),
+    SUMMARY            VARCHAR(16777216),
+    RED_FLAGS          VARCHAR(4000),
+    RED_FLAG_COUNT     NUMBER(38,0) DEFAULT 0,
+    KEYWORDS           VARCHAR(500)
+);
+
+-- ============================================================================
+-- COMPANY DOCUMENTS (ESG, Annual Reports, News)
+-- ============================================================================
+
+CREATE OR REPLACE TABLE COMPANY_DOCUMENTS (
+    DOC_ID             VARCHAR(20),
+    COMPANY            VARCHAR(200),
+    DOC_TYPE           VARCHAR(50),
+    DOC_TITLE          VARCHAR(500),
+    DOC_DATE           DATE,
+    AUTHOR             VARCHAR(200),
+    FILE_PATH          VARCHAR(500),
+    PARSED_TEXT        VARCHAR(16777216),
+    SUMMARY            VARCHAR(16777216),
+    SENTIMENT          VARCHAR(20),
+    KEYWORDS           VARCHAR(500),
+    SOURCE_URL         VARCHAR(1000)
+);
+
+-- ============================================================================
 -- Table-level role grants
 -- ============================================================================
 
@@ -312,3 +352,12 @@ GRANT SELECT ON ALL TABLES IN SCHEMA LETTERONE_DB.PUBLIC TO ROLE EXEC_READONLY;
 GRANT SELECT ON TABLE INVESTORS TO ROLE TREASURY_OPS;
 GRANT SELECT ON TABLE CAPITAL_ACCOUNTS TO ROLE TREASURY_OPS;
 GRANT SELECT ON TABLE CAPITAL_ACTIVITY TO ROLE TREASURY_OPS;
+
+-- Call intelligence and company docs (EXEC_READONLY via ALL TABLES above; explicit for other roles)
+GRANT SELECT ON TABLE EXECUTIVE_CALLS TO ROLE TREASURY_OPS;
+GRANT SELECT ON TABLE EXECUTIVE_CALLS TO ROLE RISK;
+GRANT SELECT ON TABLE EXECUTIVE_CALLS TO ROLE DIRECT_LENDING;
+GRANT SELECT ON TABLE COMPANY_DOCUMENTS TO ROLE TREASURY_OPS;
+GRANT SELECT ON TABLE COMPANY_DOCUMENTS TO ROLE RISK;
+GRANT SELECT ON TABLE COMPANY_DOCUMENTS TO ROLE DIRECT_LENDING;
+GRANT SELECT ON TABLE COMPANY_DOCUMENTS TO ROLE TRADING_SC;

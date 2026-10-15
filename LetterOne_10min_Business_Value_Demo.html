@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="snowflake-source" content="cortex-agent-authored" />
+<title>LetterOne — 10-Minute Business Value Demo Script</title>
+<script type="application/json" id="snowflake-report-metadata">
+{
+  "generated": "2026-10-15",
+  "intent": "Condensed 10-minute business value demo script for the LetterOne Treasury platform on Snowflake",
+  "sections": [
+    { "id": "the-problem", "title": "The problem today", "producerNotes": "Statistics from LetterOne discovery interviews Sep 2026" },
+    { "id": "the-platform", "title": "One platform, four teams", "producerNotes": "Architecture summary of the LetterOne Snowflake build" },
+    { "id": "ops", "title": "Treasury Operations", "producerNotes": "Condensed from 12-min Ops section of the full 60-min demo" },
+    { "id": "risk", "title": "Risk", "producerNotes": "Condensed from 11-min Risk section" },
+    { "id": "trading", "title": "Trading", "producerNotes": "Condensed from 11-min Trading section" },
+    { "id": "direct-lending", "title": "Direct Lending", "producerNotes": "Condensed from 11-min Direct Lending section" },
+    { "id": "close", "title": "Close", "producerNotes": "Governance proof and next steps" }
+  ]
+}
+</script>
+<style>
+:root { color-scheme: light dark; }
+
+*,*::before,*::after { box-sizing: border-box; }
+
+body {
+  font-family: "Inter", -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+  max-width: 820px; width: 100%; margin: 0 auto;
+  padding: clamp(16px, 4vw, 32px);
+  color: light-dark(#1e293b, #e2e8f0);
+  background: light-dark(#ffffff, #0b0f19);
+  font-size: 15px; line-height: 1.65;
+}
+
+h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 300; letter-spacing: -0.02em; margin: 0 0 8px; color: light-dark(#0f172a, #f1f5f9); }
+h2 { font-size: 1.35rem; font-weight: 500; letter-spacing: -0.01em; margin: 0 0 10px; color: light-dark(#0f172a, #f1f5f9); }
+h3 { font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; color: light-dark(#6366f1, #818cf8); }
+
+p { margin: 0 0 14px; }
+a { color: light-dark(#4f46e5, #818cf8); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img, svg { max-width: 100%; height: auto; }
+
+.subtitle { color: light-dark(#64748b, #94a3b8); font-size: 14px; margin-bottom: 28px; }
+.subtitle strong { color: light-dark(#334155, #cbd5e1); font-weight: 500; }
+
+/* Timing bar */
+.timing-bar {
+  display: flex; gap: 2px; margin: 28px 0 36px; border-radius: 6px; overflow: hidden; height: 36px;
+}
+.timing-seg {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.03em; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 6px;
+}
+
+/* Section cards */
+.section-card {
+  border: 1px solid light-dark(#e2e8f0, #1e293b);
+  border-radius: 10px; padding: 22px 24px; margin-bottom: 20px;
+  background: light-dark(#fafbfc, #0f1525);
+}
+.section-card.highlight {
+  border-color: light-dark(#c7d2fe, #312e81);
+  background: light-dark(#eef2ff, #0f1525);
+}
+
+.time-badge {
+  display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.05em;
+  padding: 2px 8px; border-radius: 4px; margin-bottom: 10px;
+  background: light-dark(#f1f5f9, #1e293b); color: light-dark(#475569, #94a3b8);
+}
+
+/* Say / Show / Ask blocks */
+.block-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+  margin: 14px 0 6px; color: light-dark(#64748b, #64748b);
+}
+.say { font-style: italic; color: light-dark(#334155, #cbd5e1); margin: 0 0 10px; padding-left: 14px; border-left: 3px solid light-dark(#c7d2fe, #4338ca); }
+.show { margin: 0 0 10px; padding-left: 14px; border-left: 3px solid light-dark(#86efac, #166534); }
+.ask-prompt {
+  font-family: "SF Mono", "IBM Plex Mono", Consolas, monospace; font-size: 13.5px;
+  background: light-dark(#f8fafc, #1a1f2e); border: 1px solid light-dark(#e2e8f0, #2d3548);
+  border-radius: 6px; padding: 8px 12px; margin: 4px 0 10px; display: block;
+  color: light-dark(#1e293b, #e2e8f0);
+}
+
+/* Stats row */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0 20px; }
+.stat {
+  text-align: center; padding: 14px 10px; border-radius: 8px;
+  background: light-dark(#f1f5f9, #151b2d); border: 1px solid light-dark(#e2e8f0, #1e293b);
+}
+.stat .v { font-size: 1.6rem; font-weight: 300; letter-spacing: -0.02em; color: light-dark(#0f172a, #f1f5f9); }
+.stat .l { font-size: 12px; color: light-dark(#64748b, #94a3b8); margin-top: 4px; line-height: 1.35; }
+
+/* Value hooks */
+.value-hook {
+  margin: 14px 0 0; padding: 10px 14px; border-radius: 6px;
+  background: light-dark(#f0fdf4, #0a1f15); border: 1px solid light-dark(#bbf7d0, #14532d);
+  font-size: 13.5px; color: light-dark(#166534, #86efac);
+}
+.value-hook strong { font-weight: 600; }
+
+/* Divider */
+hr { border: none; border-top: 1px solid light-dark(#e2e8f0, #1e293b); margin: 32px 0; }
+
+/* Footer */
+footer { font-size: 12px; color: light-dark(#94a3b8, #475569); margin-top: 40px; padding-top: 20px; border-top: 1px solid light-dark(#e2e8f0, #1e293b); }
+
+/* Print */
+@media print {
+  @page { size: A4; margin: 0.6in 0.7in; }
+  body { background: #fff; color: #1e293b; font-size: 12px; max-width: 100%; padding: 0; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.1rem; }
+  .section-card { break-inside: avoid; border-color: #d1d5db; padding: 14px 16px; margin-bottom: 14px; }
+  .section-card.highlight { background: #f5f3ff; }
+  .timing-bar { height: 24px; }
+  .timing-seg { font-size: 9px; }
+  .stat .v { font-size: 1.2rem; }
+  .value-hook { background: #f0fdf4; }
+  .say, .show, h3, .block-label, .time-badge, .stat, .stat .v, .stat .l, .ask-prompt, footer, .subtitle, .subtitle strong, p, .value-hook, .value-hook strong { color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+
+@media screen and (max-width: 520px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .timing-seg { font-size: 0; padding: 0; }
+}
+</style>
+</head>
+<body>
+
+<h1>LetterOne Treasury Platform</h1>
+<p class="subtitle"><strong>10-Minute Business Value Demo Script</strong> &middot; Snowflake &middot; October 2026<br>
+Presenter: Colm Moynihan &middot; Account: Cian McCartney &middot; Value: Lawrence King</p>
+
+<div class="timing-bar">
+  <div class="timing-seg" style="flex:1.5; background:#6366f1;">Problem</div>
+  <div class="timing-seg" style="flex:1; background:#8b5cf6;">Platform</div>
+  <div class="timing-seg" style="flex:2; background:#3b82f6;">Ops</div>
+  <div class="timing-seg" style="flex:2; background:#10b981;">Risk</div>
+  <div class="timing-seg" style="flex:2; background:#f59e0b;">Trading</div>
+  <div class="timing-seg" style="flex:1.5; background:#a855f7;">Lending</div>
+  <div class="timing-seg" style="flex:1; background:#64748b;">Close</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: THE PROBLEM -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section-card" id="the-problem">
+  <span class="time-badge">0:00 &ndash; 1:30</span>
+  <h2>The problem today</h2>
+  <h3>Say</h3>
+  <p class="say">"We spoke with four of your teams last week. Here is what we heard."</p>
+
+  <div class="stats">
+    <div class="stat"><div class="v">~30</div><div class="l">spreadsheets produced every business day</div></div>
+    <div class="stat"><div class="v">50%+</div><div class="l">of Ops time on work that could go away</div></div>
+    <div class="stat"><div class="v">4-5 hrs</div><div class="l">a week available for Risk research</div></div>
+    <div class="stat"><div class="v">30%+</div><div class="l">of Direct Lending time validating data</div></div>
+  </div>
+
+  <h3>Say</h3>
+  <p class="say">"Enfusion is the source of truth, but everything after it is manual. Excel is the backbone, logic lives in macros one person understands, and every team spends its time building information instead of using it. AI is already being used &mdash; ChatGPT, Perplexity &mdash; but the answers have to be re-checked by hand, and they're different depending on who asks."</p>
+  <p class="say">"What we're going to show you is what happens when you solve this with one governed platform."</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: THE PLATFORM -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section-card" id="the-platform">
+  <span class="time-badge">1:30 &ndash; 2:30</span>
+  <h2>One platform, four teams</h2>
+
+  <div class="block-label">Show</div>
+  <div class="show">Open the Horizon Catalog. Three kinds of data, one place: Enfusion via secure data share (no pipeline, no SFTP), Marketplace data (Bloomberg DL+), and LetterOne's own files (statements, trustee reports, deal documents).</div>
+
+  <div class="block-label">Show</div>
+  <div class="show">The four AI agents in Snowflake Intelligence: Treasury Ops, Risk, Structured Credit, Direct Lending.</div>
+
+  <h3>Say</h3>
+  <p class="say">"Same data foundation, four experiences, each governed by role. One platform, one bill. Azure UK South, fully managed. Nothing for your IT team to run."</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: OPS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section-card highlight" id="ops">
+  <span class="time-badge">2:30 &ndash; 4:30</span>
+  <h2>Treasury Operations</h2>
+  <p style="font-size:13px; color:light-dark(#64748b, #94a3b8); margin-bottom:14px;">For David Talbot (COO), Steven Gladstone, Dmitry Yurin</p>
+
+  <div class="block-label">Show</div>
+  <div class="show">The Ops control dashboard (Streamlit): P&amp;L, cash rec, cash forecast, position rec. Each shows complete, running or exception. The Excel checklist, replaced.</div>
+
+  <div class="block-label">Show</div>
+  <div class="show">One reconciliation break: AI explains the likely cause in plain English. Rules in SQL, not VBA.</div>
+
+  <div class="block-label">Ask the Treasury Ops Agent</div>
+  <span class="ask-prompt">"What is our total cash by bank counterparty and currency this morning, and what changed versus yesterday?"</span>
+
+  <div class="block-label">Then open</div>
+  <div class="show">The generated SQL and the verified query underneath the answer. Show where the number comes from.</div>
+
+  <div class="block-label">Say</div>
+  <p class="say">"Add a new bank account or entity by adding one row. No new spreadsheet, no new macro. Growth without adding people."</p>
+
+  <div class="value-hook"><strong>Value:</strong> Ops headcount time on report production, month-end coordination (David's 75% estimate), plus the reconciliation vendor fee.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: RISK -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section-card highlight" id="risk">
+  <span class="time-badge">4:30 &ndash; 6:30</span>
+  <h2>Risk</h2>
+  <p style="font-size:13px; color:light-dark(#64748b, #94a3b8); margin-bottom:14px;">For Jason Lai (CRO), Sam Drury</p>
+
+  <div class="block-label">Show</div>
+  <div class="show">Daily Enfusion snapshots building a full time series. Data quality checks surface only breaches &mdash; no more dump-and-compare.</div>
+
+  <div class="block-label">Ask the Risk Agent</div>
+  <span class="ask-prompt">"Show USD-equivalent exposure by entity."</span>
+
+  <div class="block-label">Say</div>
+  <p class="say">"This is the same question I asked the Ops agent. Same number. One definition in the semantic layer, one answer no matter who asks."</p>
+
+  <div class="block-label">Show</div>
+  <div class="show">Monte Carlo VaR in a Snowflake Notebook: parameters visible (lookback, decay, confidence, paths). Change one assumption &mdash; the correlation matrix &mdash; and the result moves. Persist it, schedule it daily. "Check once, reuse forever."</div>
+
+  <div class="value-hook"><strong>Value:</strong> 20&ndash;30% of analyst time recaptured from assembly and checking. Time to answer a new question drops from days to minutes.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: TRADING -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section-card highlight" id="trading">
+  <span class="time-badge">6:30 &ndash; 8:30</span>
+  <h2>Trading &mdash; Structured Credit</h2>
+  <p style="font-size:13px; color:light-dark(#64748b, #94a3b8); margin-bottom:14px;">For Amy Abob, Matei Moprea</p>
+
+  <div class="block-label">Show</div>
+  <div class="show">One structured credit ledger: Enfusion + Intex + Bloomberg DL+. One governed row per tranche.</div>
+
+  <div class="block-label">Ask the Structured Credit Agent</div>
+  <span class="ask-prompt">"What is our exposure by CLO manager and rating, and how has it changed since last month's marks?"</span>
+
+  <div class="block-label">The wow moment</div>
+  <div class="show">Drop a trustee report PDF into a stage. AI_EXTRACT pulls OC/IC cushions, WARF, CCC bucket. Ask: <em>"Which deals saw the CCC bucket rise by more than one point?"</em> &mdash; PDF to trended, queryable data in minutes. No Excel step.</div>
+
+  <div class="block-label">Say</div>
+  <p class="say">"Same question, same answer, no matter who on the desk asks. That's because it comes from one semantic view with verified queries &mdash; not a different Perplexity session each time."</p>
+
+  <div class="value-hook"><strong>Value:</strong> 10&ndash;20% manual time recaptured across three people. Capacity to cover new asset classes &mdash; a revenue story, not just cost.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: DIRECT LENDING -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section-card highlight" id="direct-lending">
+  <span class="time-badge">8:30 &ndash; 9:30</span>
+  <h2>Direct Lending</h2>
+  <p style="font-size:13px; color:light-dark(#64748b, #94a3b8); margin-bottom:14px;">For Daniele Gualdani</p>
+
+  <div class="block-label">Show</div>
+  <div class="show">A synthetic deal folder pointed at Snowflake. AI classifies every file: model, IM, valuation, legal, monitoring.</div>
+
+  <div class="block-label">Show</div>
+  <div class="show">Model-vs-IM check: AI_EXTRACT pulls key figures from both. Mismatches flagged to the source page and cell. A Q&amp;A list for the counterparty is drafted automatically.</div>
+
+  <div class="block-label">Say</div>
+  <p class="say">"This is what Daniele does with ChatGPT today &mdash; but governed, logged, repeatable, and sitting next to 100+ deals of institutional memory."</p>
+
+  <div class="block-label">Governance moment</div>
+  <div class="show">Switch to a Trading role and ask about a live deal. <strong>Access is refused.</strong> Deal data is visible only to Direct Lending.</div>
+
+  <div class="value-hook"><strong>Value:</strong> 30%+ of time on validation. Review cut from 3 days to 1. More deals assessed with the same team.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: CLOSE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section-card" id="close">
+  <span class="time-badge">9:30 &ndash; 10:00</span>
+  <h2>Close: build it, govern it, scale it</h2>
+
+  <div class="block-label">Show</div>
+  <div class="show">Golden-thread lineage: the USD-equivalent exposure metric traced from Enfusion, through the semantic layer, to both the Ops and Risk agents. One definition, one answer, full audit trail.</div>
+
+  <h3>Say</h3>
+  <p class="say">"Everything you've seen runs on one platform and one bill. The foundation is built once and reused by every team. Phase 1 takes 10&ndash;12 weeks. No infrastructure to buy or run."</p>
+
+  <h3>Leave them with</h3>
+  <div class="stats">
+    <div class="stat"><div class="v">1</div><div class="l">platform, not four separate builds</div></div>
+    <div class="stat"><div class="v">4</div><div class="l">governed AI agents, scoped by role</div></div>
+    <div class="stat"><div class="v">10-12</div><div class="l">weeks to Phase 1 with Kipi.ai</div></div>
+  </div>
+</div>
+
+<hr>
+
+<footer>
+  <p><strong>Presenter notes</strong></p>
+  <p>This is the 10-minute version. For the full 60-minute demo with all prompts, data specs, prep checklists, and build kit, see <em>LetterOne_Demo_Run_of_Show.html</em> and <em>LetterOne_Demo_Specification.md</em>.</p>
+  <p>All data shown is synthetic. No real LetterOne data is used without Steven's explicit agreement.</p>
+  <p style="margin-top:12px;">LetterOne 10-Minute Business Value Demo Script &middot; Internal to Snowflake &middot; v1.0 &middot; 15 Oct 2026</p>
+</footer>
+
+</body>
+</html>

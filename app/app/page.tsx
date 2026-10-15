@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, Suspense, lazy } from "react"
-import { LayoutDashboard, ClipboardCheck, GitCompare, Shield, Calculator, CreditCard, FileText, FolderOpen, Search, Eye, Lock, Bot } from "lucide-react"
+import { LayoutDashboard, ClipboardCheck, GitCompare, Shield, Calculator, CreditCard, FileText, FolderOpen, Search, Eye, Phone, FileSearch, Lock, Bot } from "lucide-react"
 
 const DashboardPanel = lazy(() => import("@/components/DashboardPanel").then(m => ({ default: m.DashboardPanel })))
 const TreasuryOpsPanel = lazy(() => import("@/components/TreasuryOpsPanel").then(m => ({ default: m.TreasuryOpsPanel })))
@@ -12,6 +12,8 @@ const TrusteeReportsPanel = lazy(() => import("@/components/TrusteeReportsPanel"
 const DealRoomPanel = lazy(() => import("@/components/DealRoomPanel").then(m => ({ default: m.DealRoomPanel })))
 const DealSearchPanel = lazy(() => import("@/components/DealSearchPanel").then(m => ({ default: m.DealSearchPanel })))
 const CIOViewPanel = lazy(() => import("@/components/CIOViewPanel").then(m => ({ default: m.CIOViewPanel })))
+const CallIntelligencePanel = lazy(() => import("@/components/CallIntelligencePanel").then(m => ({ default: m.CallIntelligencePanel })))
+const DocumentsPanel = lazy(() => import("@/components/DocumentsPanel").then(m => ({ default: m.DocumentsPanel })))
 const GovernancePanel = lazy(() => import("@/components/GovernancePanel").then(m => ({ default: m.GovernancePanel })))
 const AgentPanel = lazy(() => import("@/components/AgentPanel").then(m => ({ default: m.AgentPanel })))
 
@@ -26,6 +28,8 @@ const NAV_ITEMS = [
   { id: "deal-room", label: "Deals", icon: FolderOpen },
   { id: "deal-search", label: "Search", icon: Search },
   { id: "cio-view", label: "CIO View", icon: Eye },
+  { id: "calls", label: "Calls", icon: Phone },
+  { id: "docs", label: "Docs", icon: FileSearch },
   { id: "governance", label: "Governance", icon: Lock },
   { id: "agent", label: "Agent", icon: Bot },
 ]
@@ -78,7 +82,7 @@ export default function Home() {
             </button>
           ))}
         </nav>
-        <span style={{ fontSize: 10, color: "#64748b", fontFamily: "monospace", whiteSpace: "nowrap", marginLeft: 12 }}>v2.1</span>
+        <span style={{ fontSize: 10, color: "#64748b", fontFamily: "monospace", whiteSpace: "nowrap", marginLeft: 12 }}>v2.2</span>
       </header>
       <main style={{ padding: 24, maxWidth: 1400, margin: "0 auto" }}>
         <Suspense fallback={<LoadingSpinner />}>
@@ -92,6 +96,8 @@ export default function Home() {
           {activeTab === "deal-room" && <DealRoomPanel />}
           {activeTab === "deal-search" && <DealSearchPanel />}
           {activeTab === "cio-view" && <CIOViewPanel />}
+          {activeTab === "calls" && <CallIntelligencePanel />}
+          {activeTab === "docs" && <DocumentsPanel />}
           {activeTab === "governance" && <GovernancePanel />}
           {activeTab === "agent" && <AgentPanel />}
         </Suspense>

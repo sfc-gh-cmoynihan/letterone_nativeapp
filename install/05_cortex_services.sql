@@ -35,6 +35,18 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE CLO_DOCUMENT_SEARCH
     WHERE PARSED_TEXT IS NOT NULL
   );
 
+-- 3. Company Document Search (ESG reports, annual reports, news articles)
+CREATE OR REPLACE CORTEX SEARCH SERVICE COMPANY_DOCUMENT_SEARCH
+  ON PARSED_TEXT
+  ATTRIBUTES COMPANY, DOC_TYPE, DOC_TITLE, SENTIMENT
+  WAREHOUSE = L1_WH
+  TARGET_LAG = '1 hour'
+  AS (
+    SELECT PARSED_TEXT, COMPANY, DOC_TYPE, DOC_TITLE, SENTIMENT
+    FROM COMPANY_DOCUMENTS
+    WHERE PARSED_TEXT IS NOT NULL
+  );
+
 -- ============================================================================
 -- SEMANTIC VIEWS
 -- ============================================================================
