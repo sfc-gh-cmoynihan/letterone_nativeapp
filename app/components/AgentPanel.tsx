@@ -21,9 +21,61 @@ const AGENT_OPTIONS = [
   { id: "risk", label: "Risk", color: "#16a34a" },
   { id: "structured-credit", label: "Structured Credit", color: "#f59e0b" },
   { id: "direct-lending", label: "Direct Lending", color: "#8b5cf6" },
+  { id: "finance", label: "Finance", color: "#be185d" },
+  { id: "cfo", label: "Group CFO", color: "#11567F" },
+  { id: "coo", label: "COO", color: "#0891b2" },
 ]
 
 const SAMPLE_QUESTIONS: Record<string, string[]> = {
+  // Robert Meadows, Finance
+  finance: [
+    "What is group NAV at the latest valuation date and how has it moved versus last quarter?",
+    "Which holdings have the largest unrealised gain or loss versus cost?",
+    "What is the MOIC for each holding at the latest valuation date?",
+    "What is net debt to EBITDA for each portfolio business?",
+    "How much dividend income has each holding paid us over the last four quarters?",
+    "Which cost centres are over budget year to date and by how much?",
+    "What is the full-year opex forecast versus budget by cost centre?",
+    "Which entities fall below minimum liquidity policy in the 13-week forecast?",
+    "What is total cash by entity and currency in USD equivalent?",
+    "What is PnL by entity and strategy for the latest report date?",
+  ],
+  // Robert Maddows, Chief Operating Officer
+  coo: [
+    "Which bank counterparties hold more than 20% of our cash?",
+    "Show total cash by legal entity, bank and currency",
+    "Which entities have the least liquidity headroom over the next 13 weeks?",
+    "What are the largest forecast cash outflows by entity and week?",
+    "Which cost centres are over budget year to date and by how much?",
+    "Break down advisory and professional fees by cost centre versus budget",
+    "What is the full-year opex forecast versus budget by cost centre?",
+    "Show USD-equivalent exposure by entity",
+    "What is PnL by entity and strategy for the latest report date?",
+    "How much cash is held in non-USD currencies by entity?",
+    "Which entities hold cash with more than three banks?",
+    "Show monthly opex actual vs budget trend for the last 12 months",
+    "What share of group cash sits in each legal entity?",
+    "Give me an operational control summary: concentration, liquidity and cost overruns",
+    "Which People cost lines are running more than 5% over budget?",
+  ],
+  // Jonathan Tubb, Group CFO / Chief of Staff
+  cfo: [
+    "What is our current group NAV by business unit?",
+    "How has group NAV moved quarter on quarter over the last two years?",
+    "Which holdings have the largest unrealised gain or loss versus cost?",
+    "What is the MOIC for each holding at the latest valuation date?",
+    "How much dividend income did the portfolio businesses pay us this year?",
+    "Which entities fall below minimum liquidity policy in the 13-week forecast?",
+    "What is total group liquidity including undrawn RCF by week?",
+    "Show net cash outflows by entity over the next 13 weeks",
+    "Which cost centres are over budget year to date and by how much?",
+    "What is the full-year opex forecast versus budget by category?",
+    "What is the net debt to EBITDA for each portfolio business?",
+    "Show USD-equivalent exposure by entity",
+    "What is our total cash by bank counterparty and currency?",
+    "Give me a board-ready summary of NAV, liquidity and opex variance",
+    "Which holdings are valued on DCF versus market price, and what share of NAV is each?",
+  ],
   "treasury-ops": [
     "What is our total cash by bank counterparty and currency?",
     "Show USD-equivalent exposure by entity and the unhedged non-USD amount",
@@ -218,7 +270,7 @@ export function AgentPanel() {
   useEffect(() => {
     if (preloadingRef.current) return
     preloadingRef.current = true
-    const questions = SAMPLE_QUESTIONS[selectedAgent.id]?.slice(0, 5) || []
+    const questions = SAMPLE_QUESTIONS[selectedAgent.id] || []
     questions.forEach(async (q) => {
       try {
         const agentMessages = [{ role: "user", content: q }]
@@ -233,7 +285,7 @@ export function AgentPanel() {
         }
       } catch {}
     })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedAgent.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || loading) return
@@ -253,21 +305,12 @@ export function AgentPanel() {
         return
       }
       const agentMessages = updated.map(m => ({ role: m.role, content: m.content }))
-      let res = await fetch("/api/ande-agent", {
+      const res = await fetch("/api/ande-agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: agentMessages, agent: selectedAgent.id }),
       })
-      let data = await res.json()
-      if (res.status === 500 && data.error && !data.answer) {
-        const apiMessages = updated.map(m => ({ role: m.role, content: [{ type: "text", text: m.content }] }))
-        res = await fetch("/api/agent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: apiMessages, model: selectedModel }),
-        })
-        data = await res.json()
-      }
+      const data = await res.json()
       const answer = data.error ? `Error: ${data.error}` : (data.answer || data.response || "No response")
       const meta = `**Model:** ${modelLabel} | **Agent:** ${selectedAgent.label} | **Asked:** ${askedAt}`
       setMessages([...updated, { role: "assistant", content: `${meta}\n\n${answer}` }])
@@ -287,8 +330,8 @@ export function AgentPanel() {
         <div style={{ flex: 1, overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: 8, padding: 16, background: "white", marginBottom: 12 }}>
           {messages.length === 0 && (
             <div style={{ textAlign: "center", padding: 40, color: "#6c757d" }}>
-              <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: "#1e293b" }}>LetterOne AI Agent</div>
-              <div style={{ fontSize: 13, color: "#64748b" }}>Ask about treasury positions, risk exposure, CLO portfolio, deals, or investors</div>
+              <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: "#1e293b" }}>LetterOne 360 AI Agent</div>
+              <div style={{ fontSize: 13, color: "#64748b" }}>Ask about treasury positions, risk exposure, CLO portfolio, deals, finance, or owners</div>
               <div style={{ display: "flex", gap: 6, justifyContent: "center", marginTop: 12 }}>
                 {AGENT_OPTIONS.map(a => (
                   <span key={a.id} style={{ padding: "3px 10px", borderRadius: 12, fontSize: 11, fontWeight: 600, background: `${a.color}15`, color: a.color, border: `1px solid ${a.color}30` }}>{a.label}</span>

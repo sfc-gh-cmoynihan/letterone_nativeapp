@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 
-interface Check { name: string; status: string; count: number }
+interface Check { name: string; status: string; count: number; asOf?: string | null }
 
 export function TreasuryOpsPanel() {
   const [checks, setChecks] = useState<Check[]>([])
@@ -30,7 +30,7 @@ export function TreasuryOpsPanel() {
                 </div>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: "#1e293b" }}>{c.name}</div>
-                  <div style={{ fontSize: 12, color: "#64748b" }}>{c.count} records processed</div>
+                  <div style={{ fontSize: 12, color: "#64748b" }}>{c.count} records processed{c.asOf ? ` · as of ${c.asOf}` : ""}</div>
                 </div>
               </div>
               <span style={{ padding: "3px 10px", borderRadius: 12, fontSize: 11, fontWeight: 600, background: c.status === "Complete" ? "#dcfce7" : "#fef9c3", color: c.status === "Complete" ? "#166534" : "#854d0e" }}>{c.status}</span>

@@ -7,12 +7,12 @@ export function DealSearchPanel() {
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
 
-  const search = async () => {
-    if (!query.trim()) return
+  const search = async (text: string = query) => {
+    if (!text.trim()) return
     setLoading(true)
     setSearched(true)
     try {
-      const r = await fetch(`/api/deal-documents?q=${encodeURIComponent(query)}`)
+      const r = await fetch(`/api/deal-documents?q=${encodeURIComponent(text)}`)
       const d = await r.json()
       setResults(d.results || d.documents || [])
     } catch { setResults([]) }
@@ -34,7 +34,7 @@ export function DealSearchPanel() {
       <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
         <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && search()}
           placeholder="Search deal documents..." style={{ flex: 1, padding: "10px 16px", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 14, outline: "none" }} />
-        <button onClick={search} disabled={loading} style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: "#1e3a5f", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>{loading ? "Searching..." : "Search"}</button>
+        <button onClick={() => search()} disabled={loading} style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: "#1e3a5f", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>{loading ? "Searching..." : "Search"}</button>
       </div>
 
       {!searched && (
@@ -42,7 +42,7 @@ export function DealSearchPanel() {
           <div style={{ fontSize: 12, color: "#64748b", marginBottom: 8, fontWeight: 600 }}>Suggested queries:</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {examples.map(e => (
-              <button key={e} onClick={() => { setQuery(e); search() }} style={{ padding: "6px 14px", borderRadius: 8, border: "1px solid #e2e8f0", background: "#fff", color: "#475569", fontSize: 12, cursor: "pointer" }}>"{e}"</button>
+              <button key={e} onClick={() => { setQuery(e); search(e) }} style={{ padding: "6px 14px", borderRadius: 8, border: "1px solid #e2e8f0", background: "#fff", color: "#475569", fontSize: 12, cursor: "pointer" }}>"{e}"</button>
             ))}
           </div>
         </div>

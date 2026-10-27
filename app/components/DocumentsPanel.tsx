@@ -20,13 +20,16 @@ export function DocumentsPanel() {
   const [typeFilter, setTypeFilter] = useState("All")
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [searched, setSearched] = useState(false)
+  const [answer, setAnswer] = useState("")
+  const [searching, setSearching] = useState(false)
 
   useEffect(() => {
     fetch("/api/company-docs").then(r => r.json()).then(d => { setDocs(d.documents || []); setLoading(false) }).catch(() => setLoading(false))
   }, [])
 
-  const doSearch = async () => {
-    if (!query.trim()) {
+  const doSearch = async (text: string = query) => {
+    setAnswer("")
+    if (!text.trim()) {
       setSearched(false)
       setLoading(true)
       const r = await fetch("/api/company-docs")
@@ -35,17 +38,24 @@ export function DocumentsPanel() {
       setLoading(false)
       return
     }
-    setLoading(true)
+    setSearching(true)
     setSearched(true)
-    const r = await fetch(`/api/company-docs?q=${encodeURIComponent(query)}`)
-    const d = await r.json()
-    setDocs(d.results || d.documents || [])
-    setLoading(false)
+    setExpandedId(null)
+    const type = typeFilter === "All" ? "" : `&type=${encodeURIComponent(typeFilter)}`
+    try {
+      const r = await fetch(`/api/company-docs?q=${encodeURIComponent(text)}${type}`)
+      const d = await r.json()
+      setDocs(d.results || d.documents || [])
+      setAnswer(d.answer || (d.error ? `Error: ${d.error}` : ""))
+    } finally {
+      setSearching(false)
+    }
   }
 
   const filterByType = async (type: string) => {
     setTypeFilter(type)
     setSearched(false)
+    setAnswer("")
     setLoading(true)
     const url = type === "All" ? "/api/company-docs" : `/api/company-docs?type=${encodeURIComponent(type)}`
     const r = await fetch(url)
@@ -72,7 +82,7 @@ export function DocumentsPanel() {
       <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
         <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && doSearch()}
           placeholder="Search documents..." style={{ flex: 1, padding: "10px 16px", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 14, outline: "none" }} />
-        <button onClick={doSearch} style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: "#1e3a5f", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Search</button>
+        <button onClick={() => doSearch()} disabled={searching} style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: "#1e3a5f", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>{searching ? "Searching..." : "Search"}</button>
       </div>
 
       {/* Suggested queries */}
@@ -81,7 +91,7 @@ export function DocumentsPanel() {
           <div style={{ fontSize: 12, color: "#64748b", marginBottom: 8, fontWeight: 600 }}>Suggested queries:</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {examples.map(e => (
-              <button key={e} onClick={() => { setQuery(e); setTimeout(doSearch, 0) }} style={{ padding: "6px 14px", borderRadius: 8, border: "1px solid #e2e8f0", background: "#fff", color: "#475569", fontSize: 12, cursor: "pointer" }}>
+              <button key={e} onClick={() => { setQuery(e); doSearch(e) }} style={{ padding: "6px 14px", borderRadius: 8, border: "1px solid #e2e8f0", background: "#fff", color: "#475569", fontSize: 12, cursor: "pointer" }}>
                 &ldquo;{e}&rdquo;
               </button>
             ))}
@@ -99,8 +109,21 @@ export function DocumentsPanel() {
         ))}
       </div>
 
+      {/* AI answer */}
+      {searching && <div style={{ padding: 20, marginBottom: 16, background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: 12, fontSize: 13, color: "#1e40af" }}>Searching documents and generating answer with Cortex AI...</div>}
+      {!searching && searched && answer && (
+        <div style={{ padding: 20, marginBottom: 16, background: "#f0f9ff", border: "1px solid #bfdbfe", borderLeft: "4px solid #3b82f6", borderRadius: 12 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#1e40af", marginBottom: 8, textTransform: "uppercase" }}>Answer · Cortex Search + AI_COMPLETE</div>
+          <div style={{ fontSize: 14, color: "#1e293b", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{answer.replace(/\*\*/g, "")}</div>
+          {docs.length > 0 && <div style={{ fontSize: 12, color: "#475569", marginTop: 12 }}>
+            <b>Sources:</b> {docs.slice(0, 3).map((d: any, i: number) => `[${i + 1}] ${d.DOC_TITLE}`).join("  ·  ")}
+          </div>}
+        </div>
+      )}
+      {searched && !searching && docs.length > 0 && <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, marginBottom: 8 }}>{docs.length} matching documents</div>}
+
       {/* Document list */}
-      {docs.length === 0 && <div style={{ padding: 40, textAlign: "center", color: "#94a3b8" }}>No documents found</div>}
+      {!searching && docs.length === 0 && <div style={{ padding: 40, textAlign: "center", color: "#94a3b8" }}>No documents found</div>}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {docs.map((d: any, i: number) => {
           const tc = TYPE_COLORS[d.DOC_TYPE || d.doc_type] || TYPE_COLORS["News Article"]

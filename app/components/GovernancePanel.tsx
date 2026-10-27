@@ -28,18 +28,6 @@ export function GovernancePanel() {
               <span style={{ fontSize: 12, color: "#64748b", maxWidth: 300, textAlign: "right" }}>{r.ACCESS}</span>
             </div>
           ))}
-          <div style={{ marginTop: 20, padding: 16, background: "#fef2f2", borderRadius: 8, border: "1px solid #fecaca" }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#991b1b", marginBottom: 6 }}>Demo Moment: Access Refusal</div>
-            <div style={{ fontSize: 12, color: "#7f1d1d", lineHeight: 1.6 }}>
-              <div style={{ marginBottom: 6 }}>Agents inherit the caller's Snowflake role — data access is enforced at query time, not the application layer.</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 4, padding: "8px 12px", background: "#fff5f5", borderRadius: 6 }}>
-                <div><span style={{ fontWeight: 600 }}>1.</span> Log in as a <span style={{ fontFamily: "monospace", fontWeight: 600 }}>TRADING_SC</span> user</div>
-                <div><span style={{ fontWeight: 600 }}>2.</span> Open the <span style={{ fontWeight: 600 }}>Agent</span> tab → select <span style={{ fontWeight: 600 }}>Direct Lending</span></div>
-                <div><span style={{ fontWeight: 600 }}>3.</span> Ask: <em>"Show me live deals with LTV above 60%"</em></div>
-                <div><span style={{ fontWeight: 600 }}>4.</span> Access is refused — <span style={{ fontFamily: "monospace" }}>DEAL_LIBRARY</span> and <span style={{ fontFamily: "monospace" }}>DEAL_DOCUMENTS</span> are granted only to <span style={{ fontFamily: "monospace", fontWeight: 600 }}>DIRECT_LENDING</span> and <span style={{ fontFamily: "monospace", fontWeight: 600 }}>EXEC_READONLY</span></div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: 24 }}>

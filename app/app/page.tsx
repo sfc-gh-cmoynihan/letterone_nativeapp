@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, Suspense, lazy } from "react"
-import { LayoutDashboard, ClipboardCheck, GitCompare, Shield, Calculator, CreditCard, FileText, FolderOpen, Search, Eye, Phone, FileSearch, Lock, Bot } from "lucide-react"
+import { LayoutDashboard, ClipboardCheck, GitCompare, Shield, Calculator, CreditCard, FileText, FolderOpen, Search, Eye, Phone, FileSearch, Lock, Bot, Globe } from "lucide-react"
 
 const DashboardPanel = lazy(() => import("@/components/DashboardPanel").then(m => ({ default: m.DashboardPanel })))
 const TreasuryOpsPanel = lazy(() => import("@/components/TreasuryOpsPanel").then(m => ({ default: m.TreasuryOpsPanel })))
@@ -16,6 +16,7 @@ const CallIntelligencePanel = lazy(() => import("@/components/CallIntelligencePa
 const DocumentsPanel = lazy(() => import("@/components/DocumentsPanel").then(m => ({ default: m.DocumentsPanel })))
 const GovernancePanel = lazy(() => import("@/components/GovernancePanel").then(m => ({ default: m.GovernancePanel })))
 const AgentPanel = lazy(() => import("@/components/AgentPanel").then(m => ({ default: m.AgentPanel })))
+const GlobalMapPanel = lazy(() => import("@/components/GlobalMapPanel").then(m => ({ default: m.GlobalMapPanel })))
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Home", icon: LayoutDashboard },
@@ -30,6 +31,7 @@ const NAV_ITEMS = [
   { id: "cio-view", label: "CIO View", icon: Eye },
   { id: "calls", label: "Calls", icon: Phone },
   { id: "docs", label: "Docs", icon: FileSearch },
+  { id: "global-map", label: "Global Map", icon: Globe },
   { id: "governance", label: "Governance", icon: Lock },
   { id: "agent", label: "Agent", icon: Bot },
 ]
@@ -59,7 +61,7 @@ export default function Home() {
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginRight: 24 }}>
           <div style={{ width: 28, height: 28, borderRadius: 6, background: "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 14, fontWeight: 800 }}>L1</div>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.3 }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: "#f1f5f9" }}>LetterOne</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#f1f5f9" }}>LetterOne 360</span>
             <span style={{ fontSize: 10, color: "#94a3b8", fontFamily: "monospace" }}>{currentTime}</span>
           </div>
         </div>
@@ -86,7 +88,7 @@ export default function Home() {
       </header>
       <main style={{ padding: 24, maxWidth: 1400, margin: "0 auto" }}>
         <Suspense fallback={<LoadingSpinner />}>
-          {activeTab === "dashboard" && <DashboardPanel />}
+          {activeTab === "dashboard" && <DashboardPanel onNavigate={setActiveTab} />}
           {activeTab === "treasury-ops" && <TreasuryOpsPanel />}
           {activeTab === "reconciliation" && <ReconciliationPanel />}
           {activeTab === "risk" && <RiskDashboardPanel />}
@@ -98,6 +100,7 @@ export default function Home() {
           {activeTab === "cio-view" && <CIOViewPanel />}
           {activeTab === "calls" && <CallIntelligencePanel />}
           {activeTab === "docs" && <DocumentsPanel />}
+          {activeTab === "global-map" && <GlobalMapPanel />}
           {activeTab === "governance" && <GovernancePanel />}
           {activeTab === "agent" && <AgentPanel />}
         </Suspense>
