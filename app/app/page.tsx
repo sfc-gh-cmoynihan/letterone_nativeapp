@@ -84,7 +84,7 @@ export default function Home() {
             </button>
           ))}
         </nav>
-        <span style={{ fontSize: 10, color: "#64748b", fontFamily: "monospace", whiteSpace: "nowrap", marginLeft: 12 }}>v2.2</span>
+        <span style={{ fontSize: 10, color: "#64748b", fontFamily: "monospace", whiteSpace: "nowrap", marginLeft: 12 }}>v2.4</span>
       </header>
       <main style={{ padding: 24, maxWidth: 1400, margin: "0 auto" }}>
         <Suspense fallback={<LoadingSpinner />}>
