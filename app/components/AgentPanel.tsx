@@ -298,7 +298,7 @@ export function AgentPanel() {
     const modelLabel = MODELS.find(m => m.value === selectedModel)?.label || selectedModel
     try {
       const cacheKey = `${selectedAgent.id}:${text.trim()}`
-      const cached = updated.length === 1 ? preloadCache.current.get(cacheKey) : undefined
+      const cached = preloadCache.current.get(cacheKey)
       if (cached) {
         const meta = `**Model:** ${modelLabel} | **Agent:** ${selectedAgent.label} | **Asked:** ${askedAt}`
         setMessages([...updated, { role: "assistant", content: `${meta}\n\n${cached}` }])

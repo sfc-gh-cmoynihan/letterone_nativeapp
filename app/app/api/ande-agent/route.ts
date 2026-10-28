@@ -40,10 +40,13 @@ export async function POST(req: Request) {
     })
 
     const single = messages.length === 1 && messages[0].role === "user"
-    const question = single ? String(Array.isArray(messages[0].content) ? messages[0].content[0]?.text || "" : messages[0].content || "") : ""
+    // Cache lookup uses the latest user question even mid-conversation, so clicking another
+    // sample question is instant; only single-turn answers are written (see below).
+    const last = messages[messages.length - 1]
+    const question = last?.role === "user" ? String(Array.isArray(last.content) ? last.content[0]?.text || "" : last.content || "") : ""
     const qKey = normalize(question)
     const memKey = `${agentKey}|${qKey}`
-    if (single && qKey && !body.refresh) {
+    if (qKey && !body.refresh) {
       const hit = memCache.get(memKey)
       if (hit && Date.now() - hit.at < CACHE_TTL_HOURS * 3600e3) return Response.json({ answer: hit.answer, cached: true })
       try {
