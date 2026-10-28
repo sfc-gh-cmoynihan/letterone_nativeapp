@@ -20,7 +20,7 @@ const GlobalMapPanel = lazy(() => import("@/components/GlobalMapPanel").then(m =
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Home", icon: LayoutDashboard },
-  { id: "treasury-ops", label: "Treasury Ops", icon: ClipboardCheck },
+  { id: "treasury-ops", label: "Treasury", icon: ClipboardCheck },
   { id: "reconciliation", label: "Reconciliation", icon: GitCompare },
   { id: "cio-view", label: "CIO View", icon: Eye },
   { id: "risk", label: "Risk", icon: Shield },
@@ -75,7 +75,7 @@ export default function Home() {
                 border: "none",
                 background: activeTab === item.id ? "rgba(96, 165, 250, 0.35)" : "transparent",
                 color: activeTab === item.id ? "#ffffff" : "#f1f5f9",
-                fontSize: 14, fontWeight: activeTab === item.id ? 700 : 600,
+                fontSize: 14, fontWeight: activeTab === item.id ? 500 : 400,
                 cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s",
               }}
             >
@@ -84,7 +84,7 @@ export default function Home() {
             </button>
           ))}
         </nav>
-        <span style={{ fontSize: 10, color: "#64748b", fontFamily: "monospace", whiteSpace: "nowrap", marginLeft: 12 }}>v2.4</span>
+        <span style={{ fontSize: 10, color: "#64748b", fontFamily: "monospace", whiteSpace: "nowrap", marginLeft: 12 }}>v2.6</span>
       </header>
       <main style={{ padding: 24, maxWidth: 1400, margin: "0 auto" }}>
         <Suspense fallback={<LoadingSpinner />}>
