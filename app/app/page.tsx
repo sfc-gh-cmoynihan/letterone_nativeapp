@@ -71,15 +71,15 @@ export default function Home() {
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               style={{
-                display: "flex", alignItems: "center", gap: 5, padding: "7px 11px", borderRadius: 6,
+                display: "flex", alignItems: "center", gap: 6, padding: "8px 10px", borderRadius: 6,
                 border: "none",
                 background: activeTab === item.id ? "rgba(96, 165, 250, 0.35)" : "transparent",
                 color: activeTab === item.id ? "#ffffff" : "#f1f5f9",
-                fontSize: 12, fontWeight: activeTab === item.id ? 700 : 600,
+                fontSize: 14, fontWeight: activeTab === item.id ? 700 : 600,
                 cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s",
               }}
             >
-              <item.icon size={14} />
+              <item.icon size={16} />
               {item.label}
             </button>
           ))}
