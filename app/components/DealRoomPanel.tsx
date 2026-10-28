@@ -19,6 +19,11 @@ export function DealRoomPanel() {
   if (!data) return <div style={{ padding: 40, color: "#dc2626" }}>Failed to load</div>
 
   const deals = filter === "All" ? data.deals : (data.deals || []).filter((d: any) => d.DEAL_STATUS === filter)
+  const pickStatus = (s: string) => {
+    setFilter(prev => prev === s ? "All" : s)
+    setSelected(null)
+    setTimeout(() => document.getElementById("deal-list")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50)
+  }
 
   return (
     <div style={{ padding: "24px 0" }}>
@@ -27,10 +32,14 @@ export function DealRoomPanel() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
         <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: 20 }}>
-          <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 700 }}>Deals by Status</h3>
+          <h3 style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700 }}>Deals by Status</h3>
+          <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 8 }}>Click a segment to see its deals</div>
           <ResponsiveContainer width="100%" height={200}>
-            <PieChart><Pie data={data.byStatus} dataKey="CNT" nameKey="DEAL_STATUS" cx="50%" cy="50%" outerRadius={70} innerRadius={35} label={({ DEAL_STATUS, CNT }) => `${DEAL_STATUS} (${CNT})`}>
-              {(data.byStatus || []).map((e: any) => <Cell key={e.DEAL_STATUS} fill={STATUS_COLORS[e.DEAL_STATUS] || "#94a3b8"} />)}
+            <PieChart><Pie data={data.byStatus} dataKey="CNT" nameKey="DEAL_STATUS" cx="50%" cy="50%" outerRadius={70} innerRadius={35} style={{ cursor: "pointer" }}
+              onClick={(e: any) => e?.DEAL_STATUS && pickStatus(e.DEAL_STATUS)} label={({ DEAL_STATUS, CNT }) => `${DEAL_STATUS} (${CNT})`}>
+              {(data.byStatus || []).map((e: any) => <Cell key={e.DEAL_STATUS} fill={STATUS_COLORS[e.DEAL_STATUS] || "#94a3b8"} cursor="pointer"
+                stroke={filter === e.DEAL_STATUS ? "#0f172a" : "#fff"} strokeWidth={filter === e.DEAL_STATUS ? 3 : 1}
+                opacity={filter !== "All" && filter !== e.DEAL_STATUS ? 0.45 : 1} />)}
             </Pie><Tooltip /></PieChart>
           </ResponsiveContainer>
         </div>
@@ -48,10 +57,11 @@ export function DealRoomPanel() {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+      <div id="deal-list" style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center" }}>
         {["All", "Live", "Closed", "Dead"].map(s => (
           <button key={s} onClick={() => setFilter(s)} style={{ padding: "6px 14px", borderRadius: 8, border: filter === s ? "1px solid #1e3a5f" : "1px solid #e2e8f0", background: filter === s ? "#1e3a5f" : "#fff", color: filter === s ? "#fff" : "#475569", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>{s}</button>
         ))}
+        {filter !== "All" && <span style={{ marginLeft: 8, fontSize: 12, color: "#475569", fontWeight: 600 }}>Showing {(deals || []).length} {filter} deals</span>}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: selected ? "1fr 1fr" : "1fr", gap: 20 }}>
