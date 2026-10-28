@@ -32,7 +32,7 @@ const NAV_ITEMS = [
   { id: "deal-search", label: "Search", icon: Search },
   { id: "calls", label: "Calls", icon: Phone },
   { id: "docs", label: "Docs", icon: FileSearch },
-  { id: "global-map", label: "Global Map", icon: Globe },
+  { id: "global-map", label: "Map", icon: Globe },
   { id: "agent", label: "Agent", icon: Bot },
 ]
 
