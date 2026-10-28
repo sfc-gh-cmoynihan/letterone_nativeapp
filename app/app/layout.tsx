@@ -5,9 +5,9 @@ export const metadata: Metadata = {
   title: "LetterOne 360",
   description: "Governed Data & AI platform for Treasury Operations, Risk, Trading and Direct Lending",
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: "/favicon.png?v=l1",
+    shortcut: "/favicon.png?v=l1",
+    apple: "/favicon.png?v=l1",
   },
 }
 
