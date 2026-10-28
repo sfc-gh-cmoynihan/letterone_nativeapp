@@ -73,9 +73,9 @@ export default function Home() {
               style={{
                 display: "flex", alignItems: "center", gap: 5, padding: "7px 11px", borderRadius: 6,
                 border: "none",
-                background: activeTab === item.id ? "rgba(59, 130, 246, 0.2)" : "transparent",
-                color: activeTab === item.id ? "#93c5fd" : "#94a3b8",
-                fontSize: 12, fontWeight: activeTab === item.id ? 600 : 500,
+                background: activeTab === item.id ? "rgba(96, 165, 250, 0.35)" : "transparent",
+                color: activeTab === item.id ? "#ffffff" : "#f1f5f9",
+                fontSize: 12, fontWeight: activeTab === item.id ? 700 : 600,
                 cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s",
               }}
             >
