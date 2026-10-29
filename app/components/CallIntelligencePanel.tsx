@@ -163,6 +163,10 @@ export function CallIntelligencePanel() {
                     </div>
                   )}
 
+                  {c.RECORDING_PATH && (
+                    <div style={{ fontSize: 12, color: "#64748b", margin: "12px 0" }}>Recording: {c.RECORDING_PATH}</div>
+                  )}
+
                   {/* Transcript */}
                   <div style={{ marginTop: 12 }}>
                     <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 8, textTransform: "uppercase" }}>Full Transcript</div>

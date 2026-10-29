@@ -1,6 +1,6 @@
 -- ============================================================================
 -- LetterOne Treasury Platform — Table Definitions (17 tables)
--- Version: 1.0 | Date: 2026-09-29
+-- Version: 1.1 | Date: 2026-10-29
 -- ============================================================================
 
 USE ROLE ACCOUNTADMIN;
@@ -288,7 +288,9 @@ CREATE OR REPLACE TABLE EXECUTIVE_CALLS (
     SUMMARY            VARCHAR(16777216),
     RED_FLAGS          VARCHAR(4000),
     RED_FLAG_COUNT     NUMBER(38,0) DEFAULT 0,
-    KEYWORDS           VARCHAR(500)
+    KEYWORDS           VARCHAR(500),
+    RECORDING_PATH     VARCHAR(500),       -- @TREASURY.L1_CALLS/mp4/... (staged calls only)
+    TRANSCRIPT_PATH    VARCHAR(500)
 );
 
 -- ============================================================================

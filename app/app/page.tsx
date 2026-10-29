@@ -21,7 +21,7 @@ const GlobalMapPanel = lazy(() => import("@/components/GlobalMapPanel").then(m =
 const NAV_ITEMS = [
   { id: "dashboard", label: "Home", icon: LayoutDashboard },
   { id: "treasury-ops", label: "Treasury", icon: ClipboardCheck },
-  { id: "reconciliation", label: "Reconciliation", icon: GitCompare },
+  { id: "reconciliation", label: "Recon", icon: GitCompare },
   { id: "cio-view", label: "CIO View", icon: Eye },
   { id: "risk", label: "Risk", icon: Shield },
   { id: "governance", label: "Governance", icon: Lock },
@@ -84,7 +84,7 @@ export default function Home() {
             </button>
           ))}
         </nav>
-        <span style={{ fontSize: 10, color: "#64748b", fontFamily: "monospace", whiteSpace: "nowrap", marginLeft: 12 }}>v2.6</span>
+        <span style={{ fontSize: 10, color: "#64748b", fontFamily: "monospace", whiteSpace: "nowrap", marginLeft: 12 }}>v3.1</span>
       </header>
       <main style={{ padding: 24, maxWidth: 1400, margin: "0 auto" }}>
         <Suspense fallback={<LoadingSpinner />}>
